@@ -160,6 +160,24 @@ ipcMain.handle('zen', async (_e, what, a, b, c) => {
         try { win.setBackgroundMaterial(b ? 'acrylic' : 'none'); win.setBackgroundColor(b ? '#00000000' : '#0e0f13'); } catch {}
       } else if (a === 'opacity') { try { win.setOpacity(Math.min(1, Math.max(0.3, +b || 1))); } catch {} }
       return { max: win.isMaximized(), top: win.isAlwaysOnTop() };
+    case 'obsLocal': {
+      // OBS en este mismo PC: su puerto y contraseña del WebSocket salen de su
+      // configuración, así ZenChat se conecta solo sin copiar nada
+      const base = path.join(app.getPath('appData'), 'obs-studio', 'plugin_config', 'obs-websocket');
+      for (const f of ['config.json', path.join('..', '..', 'global.ini')]) {
+        try {
+          const t = fs.readFileSync(path.join(base, f), 'utf8');
+          if (f === 'config.json') {
+            const j = JSON.parse(t);
+            return { found: true, enabled: j.server_enabled !== false, port: j.server_port || 4455, auth: j.auth_required !== false, password: j.server_password || '' };
+          }
+          const sec = (t.split(/\[OBSWebSocket\]/)[1] || '').split(/\n\[/)[0];
+          const g = k => ((sec.match(new RegExp('^' + k + '=(.*)$', 'm')) || [])[1] || '').trim();
+          if (sec) return { found: true, enabled: g('ServerEnabled') !== 'false', port: +g('ServerPort') || 4455, auth: g('AuthRequired') !== 'false', password: g('ServerPassword') };
+        } catch {}
+      }
+      return { found: false };
+    }
     case 'update': if (a === 'install') return installUpdate(); checkUpdates(true); return updState;
     case 'updState': return updState;
   }

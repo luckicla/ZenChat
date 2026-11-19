@@ -26,6 +26,7 @@ contextBridge.exposeInMainWorld('zen', {
   flash: () => call('flash'),
   win: (what, v) => call('win', what, v),
   update: what => call('update', what),
+  obsLocal: () => call('obsLocal'),
   updState: () => call('updState'),
   onWin: on('zen-win'),
   onClients: on('zen-clients'),

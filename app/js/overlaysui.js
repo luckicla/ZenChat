@@ -5,10 +5,25 @@ const OBS = (() => {
   let ws = null, ready = null, reqN = 0;
   const pend = new Map();
   async function sha(s) { const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)); return btoa(String.fromCharCode(...new Uint8Array(b))); }
+  let local = null;
   function connect() {
-    const o = Cfg.get('obs', {}) || {};
     if (ready) return ready;
-    ready = new Promise((ok, fail) => {
+    ready = (async () => {
+      // OBS en este PC: se lee su configuración para no tener que copiar la contraseña
+      if (!local && zen.obsLocal) { try { local = await zen.obsLocal(); } catch { local = { found: false }; } }
+      const saved = Cfg.get('obs', {}) || {};
+      const o = { ...saved };
+      if (local && local.found && (!saved.host || saved.host === '127.0.0.1' || saved.host === 'localhost')) {
+        if (!local.enabled) throw new Error('El servidor WebSocket de OBS está apagado (Herramientas → Ajustes del servidor WebSocket)');
+        o.port = local.port; if (!o.password && local.auth) o.password = local.password;
+      }
+      return open(o);
+    })();
+    ready.catch(() => { ready = null; });
+    return ready;
+  }
+  function open(o) {
+    return new Promise((ok, fail) => {
       try { ws = new WebSocket(`ws://${o.host || '127.0.0.1'}:${o.port || 4455}`); } catch (e) { ready = null; fail(e); return; }
       const t = setTimeout(() => { fail(new Error('OBS no contesta: ¿está abierto y con el servidor WebSocket activado?')); try { ws.close(); } catch {} }, 5000);
       ws.onmessage = async e => {
@@ -26,8 +41,6 @@ const OBS = (() => {
       ws.onclose = e => { clearTimeout(t); ready = null; if (e.code === 4009) fail(new Error('La contraseña de OBS no es esa')); else fail(new Error('No se pudo conectar con OBS')); };
       ws.onerror = () => {};
     });
-    ready.catch(() => { ready = null; });
-    return ready;
   }
   async function req(type, data) {
     await connect();
@@ -123,7 +136,7 @@ const OverlaysUI = (() => {
   /* --- OBS --- */
   async function tryObs(manual) {
     const o = Cfg.get('obs', {}) || {};
-    if (!manual && !o.password && !o.tried) { paintObs(); return; }
+    if (!manual && !o.password && !o.tried && !zen.obsLocal) { paintObs(); return; }
     obsInfo = { state: 'connecting' }; paintObs();
     try {
       await OBS.connect();
@@ -146,7 +159,7 @@ const OverlaysUI = (() => {
       <button class="btn sm ${st === 'on' ? 'ghost' : ''}" id="obGo">${st === 'on' ? 'Volver a conectar' : 'Conectar'}</button>
       <button class="btn sm ghost" id="obCfg">Ajustes</button>
       <div class="ob-cfg" id="obForm" ${st === 'on' ? 'hidden' : ''}>
-        <div class="hint">En OBS: <b>Herramientas → Ajustes del servidor WebSocket</b> → marca «Habilitar servidor WebSocket» y copia la contraseña de «Mostrar información de conexión».</div>
+        <div class="hint">Si OBS está en este PC, ZenChat lee solo su puerto y su contraseña: basta con tener marcado en OBS <b>Herramientas → Ajustes del servidor WebSocket → Habilitar servidor WebSocket</b>. Si OBS está en otro PC, pon aquí su dirección y contraseña.</div>
         <div class="row"><div class="lb"><b>Dirección y puerto</b></div><input class="inp" id="oHost" value="${esc(o.host || '127.0.0.1')}"><input class="inp s" id="oPort" value="${esc(o.port || 4455)}"></div>
         <div class="row"><div class="lb"><b>Contraseña</b></div><input class="inp" type="password" id="oPass" value="${esc(o.password || '')}" placeholder="la de OBS"></div>
       </div>`;
