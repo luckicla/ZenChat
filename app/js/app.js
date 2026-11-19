@@ -120,18 +120,17 @@ const Mobile = {
   welcome() {
     const w = $('welcome');
     const cid = Cfg.get('clientId', '');
-    w.innerHTML = `<img class="wl" src="logo.png" alt="">
-      <h1>Zen<span>Chat</span></h1>
-      <p>Tu chat de Twitch en el bolsillo, con clips en vertical para TikTok en un toque.</p>
+    w.innerHTML = `<div class="wwrap">
+      <div class="whead"><img class="wl" src="logo.svg" alt=""><div><h1>Zen<span>Chat</span></h1><p>Tu chat de Twitch en el bolsillo</p></div></div>
       <div class="feats">
-        <div><i>💬</i>El chat como en Chatterino: emotes, insignias, menciones y respuestas</div>
-        <div><i>✂️</i>Clip de lo último que ha pasado, ya en 9:16 y listo para compartir</div>
-        <div><i>🛡️</i>Moderar manteniendo pulsado: borrar, timeout, ban, tarjeta de usuario</div>
-        <div><i>🔔</i>Follows, subs, bits, raids y canjes en Actividad</div>
+        <div><i>💬</i><span>Chat con emotes e insignias</span></div>
+        <div><i>✂️</i><span>Clips en vertical</span></div>
+        <div><i>🛡️</i><span>Moderar al mantener</span></div>
+        <div><i>🔔</i><span>Follows, subs y bits</span></div>
       </div>
-      ${cid ? '' : `<div class="cid"><b style="color:var(--paper)">Falta un paso (solo una vez)</b>Pega el «ID de cliente» de tu aplicación de Twitch. <a href="#" id="wHow">Cómo sacarlo</a><input class="inp" id="wCid" placeholder="ID de cliente" autocomplete="off" autocapitalize="off" spellcheck="false"></div>`}
+      ${cid ? '' : `<div class="cid"><b>Pega tu ID de cliente de Twitch</b><input class="inp" id="wCid" placeholder="ID de cliente" autocomplete="off" autocapitalize="off" spellcheck="false"><a href="#" id="wHow">¿Cómo lo saco?</a></div>`}
       <button class="big" id="wIn" ${cid ? '' : 'disabled'}>Entrar con Twitch</button>
-      <button class="skip" id="wSkip">Solo mirar chats</button>`;
+      <button class="skip" id="wSkip">Solo mirar chats</button></div>`;
     w.hidden = false;
     const done = () => { Cfg.setUi('welcomeDone', true); w.hidden = true; };
     if ($('wCid')) $('wCid').oninput = e => { const v = e.target.value.trim(); Cfg.set('clientId', v); $('wIn').disabled = v.length < 20; };

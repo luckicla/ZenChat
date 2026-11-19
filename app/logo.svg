@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#241a5c"/>
+      <stop offset=".55" stop-color="#15163a"/>
+      <stop offset="1" stop-color="#0b2236"/>
+    </linearGradient>
+    <radialGradient id="glowA" cx=".22" cy=".18" r=".7">
+      <stop offset="0" stop-color="#9d8cff" stop-opacity=".75"/>
+      <stop offset="1" stop-color="#9d8cff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowB" cx=".9" cy=".95" r=".65">
+      <stop offset="0" stop-color="#3fd0ff" stop-opacity=".6"/>
+      <stop offset="1" stop-color="#3fd0ff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="back" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5cd4ff" stop-opacity=".85"/>
+      <stop offset="1" stop-color="#2f8cff" stop-opacity=".55"/>
+    </linearGradient>
+    <linearGradient id="front" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity=".42"/>
+      <stop offset=".5" stop-color="#ffffff" stop-opacity=".16"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity=".08"/>
+    </linearGradient>
+    <linearGradient id="edge" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity=".9"/>
+      <stop offset=".5" stop-color="#ffffff" stop-opacity=".25"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity=".55"/>
+    </linearGradient>
+    <linearGradient id="z" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#dcd6ff"/>
+    </linearGradient>
+    <filter id="blur" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="7"/></filter>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#05040f" flood-opacity=".55"/></filter>
+    <clipPath id="sq"><rect x="8" y="8" width="240" height="240" rx="58"/></clipPath>
+  </defs>
+  <g clip-path="url(#sq)">
+    <rect x="8" y="8" width="240" height="240" fill="url(#bg)"/>
+    <rect x="8" y="8" width="240" height="240" fill="url(#glowA)"/>
+    <rect x="8" y="8" width="240" height="240" fill="url(#glowB)"/>
+    <!-- burbuja de atrás (azul) -->
+    <path d="M150 52h40a30 30 0 0 1 30 30v40a30 30 0 0 1-30 30h-4l2 22-24-22h-14a30 30 0 0 1-30-30V82a30 30 0 0 1 30-30z" fill="url(#back)" filter="url(#blur)" opacity=".9"/>
+    <path d="M150 52h40a30 30 0 0 1 30 30v40a30 30 0 0 1-30 30h-4l2 22-24-22h-14a30 30 0 0 1-30-30V82a30 30 0 0 1 30-30z" fill="url(#back)" opacity=".55"/>
+    <!-- burbuja de delante (cristal) -->
+    <g filter="url(#shadow)">
+      <path d="M72 78h86a34 34 0 0 1 34 34v52a34 34 0 0 1-34 34H104l-34 28 6-28h-4a34 34 0 0 1-34-34v-52a34 34 0 0 1 34-34z" fill="#8b7bff" fill-opacity=".38"/>
+      <path d="M72 78h86a34 34 0 0 1 34 34v52a34 34 0 0 1-34 34H104l-34 28 6-28h-4a34 34 0 0 1-34-34v-52a34 34 0 0 1 34-34z" fill="url(#front)"/>
+      <path d="M72 78h86a34 34 0 0 1 34 34v52a34 34 0 0 1-34 34H104l-34 28 6-28h-4a34 34 0 0 1-34-34v-52a34 34 0 0 1 34-34z" fill="none" stroke="url(#edge)" stroke-width="2.5"/>
+    </g>
+    <!-- la Z -->
+    <path d="M86 113h60l-56 60h62" fill="none" stroke="url(#z)" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- brillo de arriba -->
+    <path d="M8 8h240v70C180 60 90 66 8 104z" fill="#ffffff" opacity=".06"/>
+  </g>
+  <rect x="8.75" y="8.75" width="238.5" height="238.5" rx="57.25" fill="none" stroke="#ffffff" stroke-opacity=".18" stroke-width="1.5"/>
+</svg>
