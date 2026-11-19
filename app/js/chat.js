@@ -68,6 +68,8 @@ const Chat = (() => {
   // al entrar con tu cuenta, la pestaña provisional pasa a ser la de tu canal
   function ownTab() {
     if (!Me.login) return;
+    const saved = Cfg.ui('tabs');
+    if (!Array.isArray(saved) || !saved.length) { saveTabs([{ splits: [Me.login] }]); showTab(0); return; }
     const t = tabs();
     if (!t.some(x => x.auto)) return;
     const n = t.map(x => x.auto ? { splits: [Me.login] } : x);

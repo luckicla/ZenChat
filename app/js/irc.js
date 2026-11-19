@@ -37,8 +37,10 @@ const IRC = (() => {
     try { ws && ws.close(); } catch {}
     const token = await zen.token();
     setState('connecting');
-    ws = new WebSocket('wss://irc-ws.chat.twitch.tv:443');
+    const my = ws = new WebSocket('wss://irc-ws.chat.twitch.tv:443');
+    clearTimeout(pingT);
     ws.onopen = () => {
+      if (ws !== my) return;
       ws.send('CAP REQ :twitch.tv/tags twitch.tv/commands twitch.tv/membership');
       if (token && Me.login) { ws.send('PASS oauth:' + token); ws.send('NICK ' + Me.login); }
       else ws.send('NICK justinfan' + Math.floor(10000 + Math.random() * 80000)); // sin sesión: solo leer
@@ -47,6 +49,7 @@ const IRC = (() => {
       alive = Date.now();
     };
     ws.onmessage = e => {
+      if (ws !== my) return;
       alive = Date.now();
       for (const line of String(e.data).split('\r\n')) {
         if (!line) continue;
@@ -61,6 +64,7 @@ const IRC = (() => {
       }
     };
     ws.onclose = () => {
+      if (ws !== my) return; // (una conexión vieja que se cerró al reconectar)
       if (state !== 'auth') setState('off');
       clearTimeout(pingT);
       pingT = setTimeout(connect, retry);
