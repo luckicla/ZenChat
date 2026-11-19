@@ -21,6 +21,7 @@ const Clip = (() => {
     if (!Me.ok) { toast('Entra con tu cuenta de Twitch para hacer clips', true); return; }
     const c = Chat.chans.get(chLogin || Me.login) || Chat.chan(chLogin || Me.login);
     if (!c.id) { const u = await Tw.user(c.login); if (u) c.id = u.id; }
+    if (!c.id) { toast(`No encuentro el canal «${c.login}» en Twitch`, true); return; }
     busy = true;
     zen.flash();
     box(`<p id="clSt">Haciendo el clip de <b>${esc(c.name)}</b>…</p>`);

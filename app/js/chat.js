@@ -59,7 +59,20 @@ const Chat = (() => {
   setInterval(() => { for (const c of chans.values()) if (c.splits.size) refreshInfo(c.login); }, 60e3);
 
   /* ---------- pestañas y splits ---------- */
-  const tabs = () => { let t = Cfg.ui('tabs'); if (!Array.isArray(t) || !t.length) t = [{ splits: [Me.login || 'luckicla'] }]; return t; };
+  const tabs = () => {
+    let t = Cfg.ui('tabs');
+    // sin pestañas: la de tu canal (o, sin entrar aún, una provisional que se cambia por la tuya al entrar)
+    if (!Array.isArray(t) || !t.length) t = Me.login ? [{ splits: [Me.login] }] : [{ splits: ['twitch'], auto: true }];
+    return t;
+  };
+  // al entrar con tu cuenta, la pestaña provisional pasa a ser la de tu canal
+  function ownTab() {
+    if (!Me.login) return;
+    const t = tabs();
+    if (!t.some(x => x.auto)) return;
+    const n = t.map(x => x.auto ? { splits: [Me.login] } : x);
+    saveTabs(n); showTab(0);
+  }
   function saveTabs(t) { Cfg.setUi('tabs', t); }
   function paintTabs() {
     const t = tabs();
@@ -605,12 +618,13 @@ const Chat = (() => {
     if (Me.login) chan(Me.login);
     paintTabs();
     showTab(tabIdx);
+    ownTab();
   }
   function rerender() {
     for (const c of chans.values()) for (const sp of c.splits) { sp.msgs.innerHTML = ''; const f = document.createDocumentFragment(); for (const m of c.msgs.slice(-400)) f.appendChild(render(m)); sp.msgs.appendChild(f); toBottom(sp); }
   }
 
-  return { init, chan, chans, sys, refreshInfo, eventLine, rerender, showTab, addTab, render, partsHtml, paintTabs, askChannel, current: () => tabs()[tabIdx], focused: () => focused };
+  return { ownTab, init, chan, chans, sys, refreshInfo, eventLine, rerender, showTab, addTab, render, partsHtml, paintTabs, askChannel, current: () => tabs()[tabIdx], focused: () => focused };
 })();
 
 /* ---------- moderación (con la API de Twitch) ---------- */

@@ -20,7 +20,7 @@ const App = (() => {
   async function authChanged() {
     syncMe();
     IRC.reconnect();
-    if (Me.ok) { EventSub.start(); Emotes.loadMine(); Emotes.loadGlobal().then(() => Chat.rerender()); if (Me.login) Chat.chan(Me.login); }
+    if (Me.ok) { EventSub.start(); Emotes.loadMine(); Emotes.loadGlobal().then(() => Chat.rerender()); if (Me.login) { Chat.chan(Me.login); Chat.ownTab(); } }
     else EventSub.stop();
     Events.stat();
     Settings.paintAccount();
@@ -105,7 +105,7 @@ const Mobile = {
       const b = e.target.closest('button'); if (!b) return;
       zen.flash();
       const m = b.dataset.m;
-      if (m === 'clip') { const sp = Chat.focused(); Clip.make(sp ? sp.c.login : Me.login); return; }
+      if (m === 'clip') { Clip.make(Me.login); return; } // el botón grande: siempre tu directo
       if (m === 'chan') { Chat.askChannel('Abrir un canal', Chat.addTab); return; }
       root.classList.toggle('actopen', m === 'act');
       if (m === 'act') { $('actDot').hidden = true; App.view('chat'); }
