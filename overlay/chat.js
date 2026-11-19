@@ -9,8 +9,11 @@
   let c = {};
   const esc = ZenAlerts.esc;
 
+  let me = '';
   Zen.on('config', all => {
-    c = { fs: 20, font: 'inter', fade: 0, max: 30, style: 'shadow', bga: 0.62, badges: true, hideCmds: true, hideBots: 'nightbot,streamelements,streamlabs,moobot,fossabot,wizebot', dir: 'bottom', textColor: '#ffffff', gap: 4, ...(all.chatbox || {}) };
+    me = all.me || '';
+    const wd = Zen.widget(all);
+    c = { fs: 20, font: 'inter', fade: 0, max: 30, style: 'shadow', bga: 0.62, badges: true, hideCmds: true, hideBots: 'nightbot,streamelements,streamlabs,moobot,fossabot,wizebot', dir: 'bottom', textColor: '#ffffff', gap: 4, ...(all.chatbox || {}), ...(wd || {}) };
     box.className = 'chatbox ' + (c.style === 'boxes' ? 'boxes' : c.style === 'glass' ? 'boxes glass' : 'shadow') + (c.dir === 'top' ? ' top' : '');
     box.style.setProperty('--fs', c.fs + 'px');
     box.style.setProperty('--font', ZenAlerts.FONTS[c.font] || ZenAlerts.FONTS.grotesk);
@@ -19,6 +22,8 @@
     box.style.setProperty('--gap', c.gap + 'px');
   });
   Zen.on('chat', m => {
+    const want = (c.channel || me || '').toLowerCase();
+    if (m.ch && want && m.ch !== want) return;
     if (c.hideCmds && /^!/.test(m.text || '')) return;
     const bots = String(c.hideBots || '').toLowerCase().split(/[\s,]+/).filter(Boolean);
     if (bots.includes(String(m.login || '').toLowerCase())) return;

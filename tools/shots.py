@@ -62,8 +62,15 @@ with sync_playwright() as p:
     pg.screenshot(path=f'{OUT}/5-puntos.png')
     # OBS
     pg.click('#views button[data-view=overlays]')
-    time.sleep(0.8)
+    time.sleep(1.5)
+    pg.evaluate("document.querySelector('.wc[data-id=alertas] [data-a=test]').click()")
+    pg.evaluate("document.querySelector('.wc[data-id=chat] [data-a=test]').click()")
+    time.sleep(1.4)
     pg.screenshot(path=f'{OUT}/6-obs.png')
+    pg.evaluate("document.querySelector('.wc[data-id=chat] [data-a=edit]').click()")
+    time.sleep(1.2)
+    pg.evaluate("document.getElementById('page-overlays').scrollTop=330")
+    pg.screenshot(path=f'{OUT}/6b-obs-editar.png')
     # ajustes
     pg.click('#views button[data-view=settings]')
     time.sleep(0.8)

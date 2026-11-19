@@ -336,42 +336,189 @@ html.light{--ink:#efe9dc;--ink-rgb:239,233,220;--ink2:#e3dbc8;--paper:#16151a;--
 html.android:not(.noclip) .clipfab{display:flex}
 .sbtn.clipb{font-size:14px}
 
-/* ---------- el móvil (APK) ---------- */
-html.android{--fs:15px}
-html.android .tbar{-webkit-app-region:no-drag;height:44px;padding-left:4px}
-html.android .tb-w,html.android #wPin,html.android .views button[data-view=alerts],html.android .views button[data-view=overlays]{display:none}
-html.android .views button span{display:none}
-html.android .views button{padding:0 14px}
-html.android .tb-b{width:44px}
-html.android .tab{padding:0 12px;font-size:13.5px}
+/* ---------- el móvil (APK) ----------
+   De borde a borde: la barra de arriba y la de abajo son de cristal y la app
+   va por detrás de la hora y de los botones de Android (--sat / --sab). */
+.mnav,.welcome{display:none}
+html.android{--fs:15px;--sat:24px;--sab:16px;--r:12px;--emote:30px}
+html.android body{background:var(--ink)}
+html.android .bg::before{background:radial-gradient(ellipse 90% 45% at 0% 0%,rgba(var(--a1-rgb),.28),transparent 70%),radial-gradient(ellipse 80% 45% at 100% 100%,rgba(var(--a2-rgb),.22),transparent 70%)}
+html.android .tbar{-webkit-app-region:no-drag;height:calc(56px + var(--sat));padding:var(--sat) 6px 0 14px;align-items:center;gap:6px;background:rgba(var(--ink-rgb),.55);-webkit-backdrop-filter:blur(24px) saturate(1.4);backdrop-filter:blur(24px) saturate(1.4);border-bottom:1px solid rgba(var(--paper-rgb),.07);position:fixed;left:0;right:0;top:0;z-index:15}
+html.android .tb-w,html.android #wPin,html.android .views,html.android #actBtn,html.android .tb-sp{display:none}
+html.android .logo{display:flex;margin:0 4px 0 0}
+html.android .logo img{width:30px;height:30px}
+html.android .logo{font-size:0}
+html.android .tabs{flex:1;gap:6px;align-items:center;padding:0 2px}
+html.android .tab{height:34px;padding:0 14px;border:0;border-radius:17px;background:rgba(var(--paper-rgb),.07);font-size:14px;font-weight:600}
+html.android .tab.sel{background:rgba(var(--a1-rgb),.9);color:#fff}
+html.android .tab.sel::after{display:none}
 html.android .tab .x{display:none}
-html.android .live{margin:9px 4px;padding:0 7px}
+html.android #tabAdd{display:none}
+html.android .live{margin:0 4px;height:26px;padding:0 9px;border-radius:13px}
 html.android .live span{font-size:0}
-html.android .live span::after{content:"Live";font-size:11px}
-html.android .app{height:calc(100% - 44px)}
-html.android .logo{display:none}
+html.android .live span::after{content:"LIVE";font-size:11px;font-weight:700}
+html.android .upd{height:30px;margin:0 2px;border-radius:15px}
+html.android .upd span{display:none}
+html.android .app{position:fixed;inset:0;height:auto;padding-top:calc(56px + var(--sat));padding-bottom:calc(68px + var(--sab))}
+html.android.kb .app{padding-bottom:0}
+html.android.kb .mnav{display:none!important}
 /* un canal por pantalla: se pasa de uno a otro deslizando */
 html.android .splits{overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
 html.android .splits::-webkit-scrollbar{display:none}
-html.android .split{flex:0 0 100%;min-width:100%;scroll-snap-align:start}
-html.android .shead{height:38px}
-html.android .sbtn{width:34px;height:34px}
-html.android .m{padding:3px 10px}
-html.android .m .mod button{width:24px;height:24px}
-html.android .irow textarea{height:40px;padding:9px 10px;font-size:16px}
-html.android .paused-bar{bottom:80px}
-html.android .page{padding:14px 12px 60px}
-html.android .card{left:6px!important;right:6px;width:auto;top:56px!important;max-height:calc(100% - 70px)}
-html.android .card .modrow{flex-wrap:wrap}
-html.android .card .modrow button{height:34px;min-width:32px}
-html.android .activity,html.android.noact .activity{display:none}
-html.actopen .activity{display:flex!important;position:fixed;z-index:25;top:44px;right:0;bottom:0;width:min(360px,100%);box-shadow:-10px 0 40px rgba(0,0,0,.5)}
-html.android .mbox{width:calc(100vw - 20px)}
-html.android .complete{bottom:56px}
-html.android .picker{bottom:56px;height:300px}
+html.android .split{flex:0 0 100%;min-width:100%;scroll-snap-align:start;background:transparent;-webkit-backdrop-filter:none;backdrop-filter:none;border:0}
+html.android .shead{height:44px;padding:0 6px 0 14px;background:transparent;border-bottom:1px solid rgba(var(--paper-rgb),.06)}
+html.android .split.focus .shead{box-shadow:none}
+html.android .shead .ch{font-size:15px}
+html.android .shead .ch img{width:24px;height:24px;border-radius:12px}
+html.android .shead .info{font-size:12px}
+html.android .shead .modb,html.android .shead .addb{display:none}
+html.android .sbtn{width:38px;height:38px;border-radius:19px}
+html.android .msgs{padding:4px 0 10px;-webkit-user-select:none;user-select:none}
+html.android .m{padding:5px 14px;line-height:1.5;border-left-width:3px}
+html.android .m:hover{background:transparent}
+html.android .m:active{background:rgba(var(--paper-rgb),.06)}
+html.android .m .ts{font-size:.78em;opacity:.8}
+html.android .m.hl,html.android .m.first,html.android .m.sub,html.android .m.redeem,html.android .m.ann,html.android .m.cheer{margin:3px 8px;border-radius:0 10px 10px 0}
+html.android.modbtns .split.mod .m:not(.sys) .mod{display:none}
+html.android .sepline{padding:10px 14px}
+html.android .paused-bar{bottom:84px}
+html.android .paused-bar button{padding:8px 16px;border-radius:18px;font-size:13px}
+html.android .input{padding:8px 10px 10px;background:transparent;border-top:0}
+html.android .irow{align-items:center;gap:6px;padding:4px 4px 4px 6px;background:rgba(var(--ink-rgb),.6);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border:1px solid rgba(var(--paper-rgb),.1);border-radius:24px}
+html.android .irow textarea{height:40px;padding:10px 6px;font-size:16px;background:transparent;border:0;border-radius:0}
+html.android .irow .emob{width:40px;height:40px}
+html.android .irow .send{display:grid}
+.irow .send{display:none;width:40px;height:40px;flex:none;place-items:center;border-radius:20px;background:var(--a1);color:#fff}
+html.android .input .replying{padding:0 8px 6px;font-size:12.5px}
+html.android .empty-ch{display:flex}
+.empty-ch{display:none;flex-direction:column;align-items:center;gap:6px;padding:60px 30px;text-align:center;color:var(--muted);font-size:13.5px;line-height:1.5}
+.empty-ch b{color:var(--paper);font-size:16px}
+html:not(.android) .msgs .empty-ch{display:flex}
+/* barra de abajo */
+html.android .mnav{display:flex;position:fixed;z-index:16;left:0;right:0;bottom:0;height:calc(68px + var(--sab));padding:0 6px var(--sab);background:rgba(var(--ink-rgb),.62);-webkit-backdrop-filter:blur(26px) saturate(1.4);backdrop-filter:blur(26px) saturate(1.4);border-top:1px solid rgba(var(--paper-rgb),.07)}
+.mnav button{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--muted);font-size:11px;font-weight:600;position:relative}
+.mnav button svg{transition:transform .15s}
+.mnav button.sel{color:var(--paper)}
+.mnav button.sel svg{color:var(--a1)}
+.mnav button:active svg{transform:scale(.88)}
+.mnav .mclip b{width:54px;height:54px;margin-top:-26px;border-radius:27px;display:grid;place-items:center;color:#fff;background:linear-gradient(140deg,var(--a1),var(--a2));box-shadow:0 8px 24px rgba(var(--a1-rgb),.45),inset 0 1px 0 rgba(255,255,255,.35);border:3px solid rgba(var(--ink-rgb),.9)}
+.mnav .mclip span{margin-top:1px}
+.mnav .dot{position:absolute;top:12px;left:calc(50% + 8px);width:8px;height:8px;border-radius:4px;background:var(--a1);box-shadow:0 0 0 2px var(--ink)}
+html.android .clipfab{display:none!important}
+/* actividad y ajustes: pantallas completas */
+html.android .activity{display:none}
+html.android.actopen .activity{display:flex!important;position:fixed;z-index:12;inset:0;top:0;width:auto;padding-top:calc(56px + var(--sat));padding-bottom:calc(68px + var(--sab));background:rgba(var(--ink-rgb),.92);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);box-shadow:none;border:0}
+html.android .ahead{height:50px;padding:0 10px 0 16px}
+html.android .ahead b{font-size:17px}
+html.android .mini{height:32px;min-width:36px;border-radius:16px;font-size:12.5px}
+html.android .afilter{padding:8px 12px;gap:6px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+html.android .afilter button{padding:6px 12px;border-radius:16px;font-size:12.5px;white-space:nowrap}
+html.android .ai{margin:6px 10px;padding:11px 12px;border-radius:12px;border-left-width:4px}
+html.android .ai .t{font-size:14px}
+html.android .ai .s{font-size:13px}
+html.android .page{background:transparent;-webkit-backdrop-filter:none;backdrop-filter:none;padding:16px 12px 30px}
+html.android .ph h2{font-size:28px}
+html.android .box{border-radius:16px;background:rgba(var(--paper-rgb),.045);padding:2px 16px}
+html.android .row{padding:13px 0;gap:10px}
 html.android .row > label,html.android .row > .lb{flex-basis:100%}
-html.android .ctx button{padding:11px 16px;font-size:14px}
+html.android .row .lb b{font-size:14.5px}
+html.android .inp{height:42px;border-radius:12px;font-size:15px}
+html.android .inp.w{width:100%}
+html.android .btn{height:42px;border-radius:21px;padding:0 20px;font-size:14px}
+html.android .btn.sm{height:34px;border-radius:17px;font-size:13px}
+html.android .seg{border-radius:12px}
+html.android .seg button{height:36px;padding:0 12px;font-size:13px}
+html.android .sw{width:48px;height:28px;border-radius:14px}
+html.android .sw::after{width:20px;height:20px;top:2.5px;left:3px;border-radius:10px}
+html.android .sw[aria-checked=true]::after{left:22px}
+html.android .themes{grid-template-columns:repeat(3,1fr)}
+html.android .theme{border-radius:12px}
+/* menús, tarjeta y ventanas: hojas que suben desde abajo */
+html.android .ctx{left:8px!important;right:8px!important;top:auto!important;bottom:calc(8px + var(--sab));min-width:0;padding:8px 0;border-radius:20px;animation:sheet .22s cubic-bezier(.2,.8,.2,1)}
+html.android .ctx button{padding:14px 20px;font-size:15px}
+html.android #cards .card{left:0!important;right:0;top:auto!important;bottom:0;width:auto;max-height:82vh;border-radius:22px 22px 0 0;padding-bottom:var(--sab);animation:sheet .25s cubic-bezier(.2,.8,.2,1)}
+html.android .card .cbar{height:34px;cursor:default;justify-content:center;position:relative}
+html.android .card .cbar::before{content:"";width:40px;height:5px;border-radius:3px;background:rgba(var(--paper-rgb),.25)}
+html.android .card .cbar .cid{position:absolute;left:10px}
+html.android .card .cbar .pin{display:none}
+html.android .card .cbar .x{position:absolute;right:6px}
+html.android .card .av{width:76px;height:76px;border-radius:38px}
+html.android .card .modrow{flex-wrap:wrap;gap:8px}
+html.android .card .modrow .tos{flex-basis:100%;order:3}
+html.android .card .modrow .bts{flex-wrap:wrap;gap:4px}
+html.android .card .modrow button{height:36px;min-width:42px;border-radius:10px}
+html.android .card .acts button{padding:8px 12px;border-radius:16px;font-size:13px}
+html.android .modal{align-items:end}
+html.android .mbox{width:100%;max-height:88vh;border-radius:22px 22px 0 0;padding:20px 18px calc(20px + var(--sab));animation:sheet .25s cubic-bezier(.2,.8,.2,1)}
+@keyframes sheet{from{transform:translateY(40%);opacity:0}}
+html.android .complete{bottom:70px;left:10px;right:10px;border-radius:16px;overflow:hidden}
+html.android .picker{bottom:70px;left:10px;right:10px;width:auto;height:46vh;border-radius:18px}
+html.android .picker .grid button{width:46px;height:46px}
+html.android .toast{bottom:calc(90px + var(--sab));border-radius:20px;padding:10px 16px}
+/* bienvenida */
+html.android .welcome:not([hidden]){display:flex;position:fixed;z-index:40;inset:0;flex-direction:column;justify-content:center;gap:16px;padding:calc(var(--sat) + 20px) 26px calc(var(--sab) + 26px);background:var(--ink);overflow-y:auto}
+.welcome::before{content:"";position:fixed;inset:0;background:radial-gradient(ellipse 90% 50% at 10% 0%,rgba(var(--a1-rgb),.4),transparent 70%),radial-gradient(ellipse 90% 50% at 100% 100%,rgba(var(--a2-rgb),.3),transparent 70%);pointer-events:none}
+.welcome > *{position:relative}
+.welcome .wl{width:96px;height:96px;margin-bottom:6px;filter:drop-shadow(0 14px 30px rgba(var(--a1-rgb),.5))}
+.welcome h1{margin:0;font-size:38px;font-weight:800;letter-spacing:-1.2px;line-height:1}
+.welcome h1 span{background:linear-gradient(120deg,#b3a6ff,var(--a2));-webkit-background-clip:text;color:transparent}
+.welcome p{margin:0;color:var(--dim);font-size:15.5px;line-height:1.55}
+.welcome .feats{display:flex;flex-direction:column;gap:10px;margin:8px 0}
+.welcome .feats div{display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:16px;background:rgba(var(--paper-rgb),.06);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border:1px solid rgba(var(--paper-rgb),.08);font-size:14px;color:var(--paper)}
+.welcome .feats i{font-style:normal;width:34px;height:34px;flex:none;border-radius:11px;display:grid;place-items:center;background:rgba(var(--a1-rgb),.22);font-size:17px}
+.welcome .cid{display:flex;flex-direction:column;gap:8px;padding:14px;border-radius:16px;background:rgba(var(--paper-rgb),.05);border:1px solid rgba(var(--paper-rgb),.1);font-size:13px;color:var(--dim);line-height:1.5}
+.welcome .cid a{color:var(--a2)}
+.welcome .big{height:52px;border-radius:26px;font-size:16px;font-weight:700;color:#fff;background:linear-gradient(120deg,var(--a1),#6e8cff);box-shadow:0 12px 30px rgba(var(--a1-rgb),.4)}
+.welcome .big:disabled{opacity:.45;box-shadow:none}
+.welcome .skip{height:44px;color:var(--dim);font-size:14.5px;font-weight:600}
 
 /* hay versión nueva */
 .upd{display:flex;align-items:center;gap:6px;margin:7px 4px;padding:0 10px;border-radius:10px;font-size:11.5px;font-weight:600;color:#fff;background:rgba(var(--a1-rgb),.85);-webkit-app-region:no-drag}
 .upd:hover{filter:brightness(1.1)}
+html.android .astat{display:none}
+
+/* ---------- OBS: conexión y recuadros ---------- */
+.obsbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 14px;margin-bottom:14px;border-radius:10px;background:rgba(var(--paper-rgb),.045);border:1px solid var(--line)}
+.ob-st{display:flex;align-items:center;gap:10px;flex:1;min-width:240px}
+.ob-st i{width:10px;height:10px;border-radius:5px;background:#e5484d;box-shadow:0 0 0 4px rgba(229,72,77,.18)}
+.ob-st.on i{background:#30c48d;box-shadow:0 0 0 4px rgba(48,196,141,.18)}
+.ob-st.connecting i{background:var(--a3);animation:blink 1s infinite}
+.ob-st b{display:block;font-size:13.5px}
+.ob-st small{display:block;color:var(--muted);font-size:11.5px;margin-top:1px}
+.ob-sc{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--dim)}
+.ob-cfg{flex-basis:100%}
+.wgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px;align-items:start}
+.wc{border-radius:12px;overflow:hidden;background:rgba(var(--paper-rgb),.045);border:1px solid var(--line);transition:border-color .15s}
+.wc.open{border-color:rgba(var(--a1-rgb),.6);grid-column:1/-1}
+.wpv{position:relative;height:190px;overflow:hidden;background:
+  linear-gradient(45deg,rgba(255,255,255,.035) 25%,transparent 25%,transparent 75%,rgba(255,255,255,.035) 75%),
+  linear-gradient(45deg,rgba(255,255,255,.035) 25%,transparent 25%,transparent 75%,rgba(255,255,255,.035) 75%),rgba(0,0,0,.35);background-size:20px 20px;background-position:0 0,10px 10px}
+.wc.open .wpv{height:300px}
+.wpv iframe{border:0;pointer-events:none;display:block}
+.wpv iframe.scale{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0}
+.wpv-label{height:80px}.wc.open .wpv-label{height:100px}
+.wtag{position:absolute;left:8px;top:8px;padding:3px 9px;border-radius:10px;font-size:11px;font-weight:600;background:rgba(var(--ink-rgb),.7);backdrop-filter:blur(10px);color:var(--paper)}
+.wbody{padding:10px 12px 12px;display:flex;flex-direction:column;gap:8px}
+.wtop{display:flex;align-items:center;gap:8px}
+.wname{flex:1;min-width:0;background:transparent;border:0;border-bottom:1px solid transparent;font-weight:700;font-size:14.5px;padding:3px 0;outline:none}
+.wname:hover,.wname:focus{border-bottom-color:rgba(var(--paper-rgb),.25)}
+.won{font-size:11px;color:var(--muted);white-space:nowrap}
+.won.on{color:#30c48d}
+.wurl{display:flex;gap:6px}
+.wurl .inp{flex:1;font-size:11.5px;color:var(--dim)}
+.wbtns{display:flex;gap:6px;flex-wrap:wrap}
+.danger-t:hover{color:#ff8f8f!important;border-color:#e5484d!important}
+.wed{margin-top:4px;padding:4px 12px;border-radius:10px;background:rgba(var(--ink-rgb),.35);border:1px solid var(--line)}
+.wed output{min-width:42px;font-size:12px;color:var(--dim);font-variant-numeric:tabular-nums}
+.chips2{display:flex;flex-wrap:wrap;gap:5px}
+.chips2 button{padding:5px 10px;border-radius:14px;font-size:12px;border:1px solid rgba(var(--paper-rgb),.15);color:var(--dim)}
+.chips2 button.sel{background:rgba(var(--a1-rgb),.22);border-color:var(--a1);color:var(--paper)}
+.wadd{min-height:150px;border-radius:12px;border:1.5px dashed rgba(var(--paper-rgb),.18);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:var(--dim);font-weight:600}
+.wadd b{font-size:30px;font-weight:300;color:var(--a1)}
+.wadd small{color:var(--muted);font-weight:400}
+.wadd:hover{border-color:var(--a1);color:var(--paper)}
+.wc.open{display:grid;grid-template-columns:minmax(300px,440px) 1fr}
+.wc.open .wpv{height:auto;min-height:560px}
+.wc.open .wpv-alerts{min-height:0;aspect-ratio:16/9;align-self:start}
+.wc.open .wpv-label{min-height:120px}
+@media (max-width:1100px){.wc.open{display:block}.wc.open .wpv{min-height:300px}}

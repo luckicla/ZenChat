@@ -32,7 +32,7 @@
   window.zen = {
     info: async () => ({ version: '1.0.0', portable: false, port: 47830 }),
     cfg: async () => JSON.parse(JSON.stringify(cfg)),
-    set: async (k, v) => { cfg[k] = v; if (['alerts', 'chatbox', 'goals', 'feedbox', 'labels'].includes(k)) post('/set', { k, v }); return true; },
+    set: async (k, v) => { cfg[k] = v; if (['alerts', 'chatbox', 'goals', 'feedbox', 'labels', 'widgets'].includes(k)) post('/set', { k, v }); return true; },
     token: async () => 'tok', login: async () => ({ user_code: 'ZXCV-1234', verification_uri: 'https://www.twitch.tv/activate' }), loginPoll: () => new Promise(() => {}), loginCancel: async () => {}, logout: async () => {},
     helix: async (m, p) => {
       const q = new URLSearchParams(p.split('?')[1] || '');

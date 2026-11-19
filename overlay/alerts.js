@@ -9,14 +9,20 @@
   const queue = [];
   let busy = false, paused = false, skipNow = null;
 
+  let wd = null;
   Zen.on('config', c => {
     cfg = ZenAlerts.complete(c.alerts);
+    wd = Zen.widget(c);
     paused = !!cfg.global.paused;
-    document.body.dataset.pos = cfg.global.pos || 'center';
-    document.body.style.setProperty('--scale', cfg.global.scale || 1);
+    document.body.dataset.pos = (wd && wd.pos) || cfg.global.pos || 'center';
+    document.body.style.setProperty('--scale', (wd && wd.scale) || cfg.global.scale || 1);
     if (!paused) next();
   });
-  Zen.on('alert', ev => { queue.push(ev); next(); });
+  Zen.on('alert', ev => {
+    // un recuadro de alertas puede enseñar solo algunos tipos
+    if (wd && Array.isArray(wd.types) && wd.types.length && !wd.types.includes(ev.type)) return;
+    queue.push(ev); next();
+  });
   Zen.on('control', c => {
     if (c.do === 'skip' && skipNow) skipNow();
     if (c.do === 'clear') { queue.length = 0; if (skipNow) skipNow(); }

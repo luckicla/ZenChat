@@ -65,7 +65,7 @@ const App = (() => {
       Emotes.loadMine();
     } else {
       Emotes.loadGlobal();
-      setTimeout(() => { setView('settings'); toast('Bienvenid@ a ZenChat: entra con tu cuenta de Twitch para empezar'); }, 400);
+      if (!document.documentElement.classList.contains('android')) setTimeout(() => { setView('settings'); toast('Bienvenid@ a ZenChat: entra con tu cuenta de Twitch para empezar'); }, 400);
     }
     Events.overlayState();
     // actualizaciones: en el PC se bajan solas; aquí solo se enseña el botón.
@@ -85,6 +85,7 @@ const App = (() => {
     zen.onUpdate(upd);
     zen.updState().then(upd);
     $('updBtn').onclick = async () => upd(await zen.update('install'));
+    if (document.documentElement.classList.contains('android')) Mobile.init();
     if (document.documentElement.classList.contains('android')) {
       const check = async () => { const s = await zen.update('check'); if (s && s.state === 'portable') { upd(s); toast('Hay una versión nueva de ZenChat: dale a «Actualizar» arriba'); } };
       setTimeout(check, 4000); setInterval(check, 6 * 3600e3);
@@ -92,5 +93,52 @@ const App = (() => {
   }
   return { boot, view: setView, authChanged, setLive, mainChannel, syncMe };
 })();
+
+// el móvil: la barra de abajo y la pantalla de bienvenida
+const Mobile = {
+  init() {
+    const root = document.documentElement;
+    const nav = $('mnav');
+    const sel = m => nav.querySelectorAll('button').forEach(b => b.classList.toggle('sel', b.dataset.m === m));
+    nav.querySelectorAll('button').forEach(b => b.setAttribute('aria-label', b.querySelector('span').textContent));
+    nav.onclick = e => {
+      const b = e.target.closest('button'); if (!b) return;
+      zen.flash();
+      const m = b.dataset.m;
+      if (m === 'clip') { const sp = Chat.focused(); Clip.make(sp ? sp.c.login : Me.login); return; }
+      if (m === 'chan') { Chat.askChannel('Abrir un canal', Chat.addTab); return; }
+      root.classList.toggle('actopen', m === 'act');
+      if (m === 'act') { $('actDot').hidden = true; App.view('chat'); }
+      else App.view(m === 'settings' ? 'settings' : 'chat');
+      sel(m);
+    };
+    // un evento nuevo con Actividad cerrada: puntito
+    const emit = Events.emit;
+    Events.emit = (ev, o) => { emit(ev, o); if (!root.classList.contains('actopen')) $('actDot').hidden = false; };
+    if (!Me.ok && !Cfg.ui('welcomeDone', false)) this.welcome();
+  },
+  welcome() {
+    const w = $('welcome');
+    const cid = Cfg.get('clientId', '');
+    w.innerHTML = `<img class="wl" src="logo.png" alt="">
+      <h1>Zen<span>Chat</span></h1>
+      <p>Tu chat de Twitch en el bolsillo, con clips en vertical para TikTok en un toque.</p>
+      <div class="feats">
+        <div><i>💬</i>El chat como en Chatterino: emotes, insignias, menciones y respuestas</div>
+        <div><i>✂️</i>Clip de lo último que ha pasado, ya en 9:16 y listo para compartir</div>
+        <div><i>🛡️</i>Moderar manteniendo pulsado: borrar, timeout, ban, tarjeta de usuario</div>
+        <div><i>🔔</i>Follows, subs, bits, raids y canjes en Actividad</div>
+      </div>
+      ${cid ? '' : `<div class="cid"><b style="color:var(--paper)">Falta un paso (solo una vez)</b>Pega el «ID de cliente» de tu aplicación de Twitch. <a href="#" id="wHow">Cómo sacarlo</a><input class="inp" id="wCid" placeholder="ID de cliente" autocomplete="off" autocapitalize="off" spellcheck="false"></div>`}
+      <button class="big" id="wIn" ${cid ? '' : 'disabled'}>Entrar con Twitch</button>
+      <button class="skip" id="wSkip">Solo mirar chats</button>`;
+    w.hidden = false;
+    const done = () => { Cfg.setUi('welcomeDone', true); w.hidden = true; };
+    if ($('wCid')) $('wCid').oninput = e => { const v = e.target.value.trim(); Cfg.set('clientId', v); $('wIn').disabled = v.length < 20; };
+    if ($('wHow')) $('wHow').onclick = e => { e.preventDefault(); App.view('settings'); w.hidden = true; };
+    $('wIn').onclick = async () => { done(); await Settings.login(); };
+    $('wSkip').onclick = done;
+  },
+};
 
 App.boot().catch(e => { console.error(e); toast('Algo falló al arrancar: ' + e.message, true); });

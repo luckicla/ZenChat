@@ -7,7 +7,8 @@ const Zen = (() => {
   const q = new URLSearchParams(location.search);
   function connect(w) {
     try { es && es.close(); } catch {}
-    es = new EventSource('/events?w=' + encodeURIComponent(w));
+    const id = q.get('id'), pv = q.has('preview');
+    es = new EventSource('/events?w=' + encodeURIComponent(w) + (id ? '&id=' + encodeURIComponent(id) : '') + (pv ? '&preview=1' : ''));
     es.onopen = () => { retry = 1000; document.documentElement.classList.remove('off'); };
     es.onerror = () => {
       document.documentElement.classList.add('off');
@@ -22,6 +23,7 @@ const Zen = (() => {
     on(kind, fn) { handlers[kind] = fn; return this; },
     start(w) { connect(w); },
     done(data) { fetch('/api/done', { method: 'POST', body: JSON.stringify(data) }).catch(() => {}); },
+    widget(cfg) { const id = q.get('id'); return id ? (cfg.widgets || []).find(x => x.id === id) || null : null; },
     media(p) { return !p ? '' : /^(https?:|data:)/.test(p) ? p : '/' + p.replace(/^\//, ''); },
   };
 })();

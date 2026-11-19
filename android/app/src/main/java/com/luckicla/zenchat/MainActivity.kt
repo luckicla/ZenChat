@@ -15,6 +15,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsControllerCompat
+import android.widget.FrameLayout
 import androidx.webkit.WebViewAssetLoader
 
 // ZenChat en el móvil: la misma interfaz que en el PC (la carpeta app/ del
@@ -24,6 +27,7 @@ import androidx.webkit.WebViewAssetLoader
 class MainActivity : ComponentActivity() {
     lateinit var web: WebView
     lateinit var bridge: Bridge
+    var lastInsets = "24|16"
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,6 +48,10 @@ class MainActivity : ComponentActivity() {
         web.addJavascriptInterface(bridge, "ZenAndroid")
         web.webChromeClient = WebChromeClient()
         web.webViewClient = object : WebViewClient() {
+            override fun onPageFinished(view: WebView, url: String) {
+                val (t, b) = lastInsets.split("|")
+                view.evaluateJavascript("document.documentElement.style.setProperty('--sat','${t}px');document.documentElement.style.setProperty('--sab','${b}px')", null)
+            }
             override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse? =
                 loader.shouldInterceptRequest(request.url)
             override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
@@ -53,13 +61,28 @@ class MainActivity : ComponentActivity() {
                 return true
             }
         }
-        // (Android 15 pinta la app debajo de las barras: se deja su hueco)
-        ViewCompat.setOnApplyWindowInsetsListener(web) { v, insets ->
-            val b = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.ime() or WindowInsetsCompat.Type.displayCutout())
-            v.setPadding(b.left, b.top, b.right, b.bottom)
-            WindowInsetsCompat.CONSUMED
+        // De borde a borde: la página va detrás de las barras del sistema (el
+        // cristal se ve bajo la hora y la batería) y sabe cuánto ocupan con
+        // --sat/--sab; el teclado sí empuja el contenido hacia arriba.
+        val root = FrameLayout(this)
+        root.setBackgroundColor(0xFF0E0F13.toInt())
+        root.addView(web, FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT))
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        window.statusBarColor = 0x00000000
+        window.navigationBarColor = 0x00000000
+        WindowInsetsControllerCompat(window, root).isAppearanceLightStatusBars = false
+        WindowInsetsControllerCompat(window, root).isAppearanceLightNavigationBars = false
+        ViewCompat.setOnApplyWindowInsetsListener(root) { v, insets ->
+            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
+            val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
+            v.setPadding(0, 0, 0, ime.bottom)
+            val d = resources.displayMetrics.density
+            val top = bars.top / d; val bottom = (if (ime.bottom > 0) 0 else bars.bottom) / d
+            web.evaluateJavascript("document.documentElement.style.setProperty('--sat','${top}px');document.documentElement.style.setProperty('--sab','${bottom}px');document.documentElement.classList.toggle('kb',${ime.bottom > 0})", null)
+            lastInsets = "$top|$bottom"
+            insets
         }
-        setContentView(web)
+        setContentView(root)
         web.loadUrl("https://appassets.androidplatform.net/assets/index.html")
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {

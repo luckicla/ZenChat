@@ -111,7 +111,7 @@ app.on('before-quit', () => { try { store && store.flush(); } catch {} try { srv
 
 /* ---------- lo que la ventana puede pedir (preload.js → window.zen) ---------- */
 
-const OVERLAY_KEYS = ['alerts', 'chatbox', 'goals', 'feedbox', 'labels'];
+const OVERLAY_KEYS = ['alerts', 'chatbox', 'goals', 'feedbox', 'labels', 'widgets'];
 let pollCancel = false;
 
 function safeConfig() {

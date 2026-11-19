@@ -28,7 +28,7 @@ function createServer({ store, root, onClients, onAction }) {
 
   const count = () => {
     const c = {};
-    for (const k of clients) c[k.w] = (c[k.w] || 0) + 1;
+    for (const k of clients) { if (k.preview) continue; c[k.w] = (c[k.w] || 0) + 1; if (k.id) c[k.w + ':' + k.id] = (c[k.w + ':' + k.id] || 0) + 1; }
     return c;
   };
   const changed = () => { try { onClients && onClients(count()); } catch {} };
@@ -41,7 +41,7 @@ function createServer({ store, root, onClients, onAction }) {
   }
   function publicConfig() {
     const d = store.get();
-    return { alerts: d.alerts || null, chatbox: d.chatbox || null, goals: d.goals || [], feed: d.feedbox || null, labels: d.labels || null };
+    return { alerts: d.alerts || null, chatbox: d.chatbox || null, goals: d.goals || [], feed: d.feedbox || null, labels: d.labels || null, widgets: d.widgets || [], me: (d.auth && d.auth.login) || '' };
   }
   function state() { return store.get('overlayState') || { events: [], goals: {} }; }
 
@@ -65,7 +65,7 @@ function createServer({ store, root, onClients, onAction }) {
     const p = decodeURIComponent(u.pathname);
     if (p === '/events') {
       res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', Connection: 'keep-alive', 'Access-Control-Allow-Origin': '*' });
-      const c = { res, w: (u.searchParams.get('w') || 'otro').slice(0, 20) };
+      const c = { res, w: (u.searchParams.get('w') || 'otro').slice(0, 40), id: (u.searchParams.get('id') || '').slice(0, 40), preview: u.searchParams.has('preview') };
       clients.add(c);
       send(res, 'config', publicConfig());
       send(res, 'state', state());

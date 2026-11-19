@@ -156,6 +156,10 @@ tog('sTs', 'timestamps', () => Chat.rerender()); tog('sTp', 'thirdParty', () => 
     $('sGh').onclick = () => zen.open('https://github.com/luckicla/ZenChat');
     $('sUpB').onclick = async () => { $('sUpd').textContent = 'Buscando…'; paintUpd(await zen.update('check')); };
     zen.updState().then(paintUpd);
+    if (document.documentElement.classList.contains('android')) {
+      for (const id of ['sAcr', 'sTop', 'sOp', 'sData', 'sAct', 'sClF', 'sModB', 'sPH', 'sNe']) { const r = $(id) && $(id).closest('.row'); if (r) r.remove(); }
+      p.querySelectorAll('.sec').forEach(x => { if (x.textContent === 'Ventana') { x.nextElementSibling.remove(); x.remove(); } });
+    }
   }
   function paintUpd(s) {
     const el = $('sUpd'); if (!el || !s) return;

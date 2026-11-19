@@ -124,7 +124,7 @@ const Chat = (() => {
         <button class="sbtn menub" title="Más">${ICON.dots}</button></div>
       <div class="msgs"></div>
       <div class="paused-bar" hidden><button>Chat en pausa · ver lo nuevo ↓</button></div>
-      <div class="input"><div class="replying" hidden></div><div class="irow"><textarea rows="1" maxlength="500" placeholder="Enviar mensaje…" spellcheck="true"></textarea><button class="sbtn emob" title="Emotes">${ICON.smile}</button><span class="cnt"></span></div></div>
+      <div class="input"><div class="replying" hidden></div><div class="irow"><textarea rows="1" maxlength="500" placeholder="Enviar mensaje…" spellcheck="true" aria-label="Escribe un mensaje"></textarea><button class="sbtn emob" title="Emotes" aria-label="Emotes">${ICON.smile}</button><span class="cnt"></span><button class="send" aria-label="Enviar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div></div>
     </section>`);
     const sp = { el, c, k, msgs: el.querySelector('.msgs'), ta: el.querySelector('textarea'), paused: false, hover: false, reply: null, pending: 0 };
     el._sp = sp;
@@ -169,7 +169,19 @@ const Chat = (() => {
     sp.msgs.addEventListener('contextmenu', e => onMsgMenu(e, sp));
     Input.bind(sp);
     paintHeads(c);
-    // lo que ya había en el canal
+    // lo que ya había en el canal (o un aviso si aún no hay nada)
+    const empty = h(`<div class="empty-ch"><b>#${esc(c.login)}</b><span>${Me.ok ? 'Aún no ha escrito nadie. Los mensajes saldrán aquí.' : 'Estás mirando sin cuenta: entra con Twitch para escribir y moderar.'}</span></div>`);
+    sp.msgs.appendChild(empty);
+    // mantener pulsado un mensaje (móvil): el menú de responder, copiar, moderar…
+    let lp = null, lx = 0, ly = 0;
+    sp.msgs.addEventListener('touchstart', e => {
+      const t = e.touches[0]; lx = t.clientX; ly = t.clientY;
+      const target = e.target;
+      clearTimeout(lp);
+      lp = setTimeout(() => { zen.flash(); onMsgMenu({ target, clientX: lx, clientY: ly, preventDefault() {} }, sp); }, 450);
+    }, { passive: true });
+    sp.msgs.addEventListener('touchmove', e => { const t = e.touches[0]; if (Math.abs(t.clientX - lx) > 10 || Math.abs(t.clientY - ly) > 10) clearTimeout(lp); }, { passive: true });
+    sp.msgs.addEventListener('touchend', () => clearTimeout(lp));
     const frag = document.createDocumentFragment();
     for (const m of c.msgs.slice(-400)) frag.appendChild(render(m));
     sp.msgs.appendChild(frag);
@@ -216,6 +228,7 @@ const Chat = (() => {
       c.users.set(m.login, u);
     }
     for (const sp of c.splits) {
+      const em = sp.msgs.querySelector('.empty-ch'); if (em && m.cls !== 'sepline') em.remove();
       sp.msgs.appendChild(render(m));
       while (sp.msgs.childElementCount > 600) sp.msgs.firstElementChild.remove();
       if (!sp.paused) toBottom(sp);
@@ -332,6 +345,7 @@ const Chat = (() => {
       }
       case 'NOTICE': if (!hist) sys(c, m.text, 'notice'); return;
       case 'ROOMSTATE': {
+        if (!c.joinedOnce && !hist) { c.joinedOnce = true; sys(c, `Conectado a #${c.login}`); }
         if ('slow' in tg) c.modes.slow = +tg.slow;
         if ('followers-only' in tg) c.modes.followers = +tg['followers-only'];
         if ('subs-only' in tg) c.modes.subs = tg['subs-only'] === '1';
@@ -369,9 +383,10 @@ const Chat = (() => {
   }
   // el chat de OBS: el canal propio (o el elegido)
   function toOverlay(c, msg) {
-    const target = (Cfg.get('chatbox') || {}).channel || Me.login;
-    if (c.login !== target) return;
-    zen.overlay('chat', { id: msg.id, login: msg.login, name: msg.name, color: msg.color, badges: msg.badges, parts: msg.parts, text: msg.text, action: msg.action, hl: msg.hl, sys: msg.sys }, 'chat');
+    // los recuadros de chat de OBS: cada uno enseña su canal (por defecto, el tuyo)
+    const wanted = new Set([(Cfg.get('chatbox') || {}).channel || Me.login, ...(Cfg.get('widgets', []) || []).filter(w => w.type === 'chat').map(w => (w.channel || Me.login || '').toLowerCase())]);
+    if (!wanted.has(c.login)) return;
+    zen.overlay('chat', { ch: c.login, id: msg.id, login: msg.login, name: msg.name, color: msg.color, badges: msg.badges, parts: msg.parts, text: msg.text, action: msg.action, hl: msg.hl, sys: msg.sys }, 'chat');
   }
   // los eventos (follow, sub…) también como una línea en tu chat
   function eventLine(ev) {
@@ -535,6 +550,7 @@ const Chat = (() => {
       ta.addEventListener('blur', () => setTimeout(closeComp, 150));
       ta.addEventListener('focus', () => focusSplit(sp));
       sp.el.querySelector('.emob').onclick = () => Picker.toggle(sp);
+      sp.el.querySelector('.send').onclick = () => { const v = ta.value; if (!v.trim()) return; hist.unshift(v); send(sp, v); ta.value = ''; grow(); ta.focus(); };
     },
   };
   const Picker = {
@@ -594,7 +610,7 @@ const Chat = (() => {
     for (const c of chans.values()) for (const sp of c.splits) { sp.msgs.innerHTML = ''; const f = document.createDocumentFragment(); for (const m of c.msgs.slice(-400)) f.appendChild(render(m)); sp.msgs.appendChild(f); toBottom(sp); }
   }
 
-  return { init, chan, chans, sys, refreshInfo, eventLine, rerender, showTab, addTab, render, partsHtml, paintTabs, current: () => tabs()[tabIdx], focused: () => focused };
+  return { init, chan, chans, sys, refreshInfo, eventLine, rerender, showTab, addTab, render, partsHtml, paintTabs, askChannel, current: () => tabs()[tabIdx], focused: () => focused };
 })();
 
 /* ---------- moderación (con la API de Twitch) ---------- */
