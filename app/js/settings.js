@@ -53,7 +53,7 @@ const Settings = (() => {
     theme: 'zen', a1: '', a2: '', a3: '', glass: 0.72, blur: 18, fs: 13, emote: 28, round: false, uiFont: 'inter',
     bgImg: '', bgBlur: 30, bgOp: 0.5, acrylic: false, timestamps: true, badges: true, altRows: false, separators: true,
     modButtons: true, hideDeleted: false, activity: true, pauseHover: true, history: true, historyN: 100, eventLines: true,
-    clipLen: 30, clipPos: 'center', clipFab: true,
+    thirdParty: true, clipLen: 30, clipPos: 'center', clipFab: true,
     hlWords: [], mentionSound: 'synth:blip', mentionVol: 0.6, notifyMention: true, notifyEvents: false, quickTo: 600, onTop: false, opacity: 1,
   };
 
@@ -80,6 +80,7 @@ const Settings = (() => {
       <div class="box">
         ${row('Tamaño de letra', '', `<input type="range" min="10" max="22" id="sFs" value="${u('fs')}"><span id="sFsV">${u('fs')}px</span>`)}
         ${row('Tamaño de los emotes', '', `<input type="range" min="18" max="56" id="sEm" value="${u('emote')}"><span id="sEmV">${u('emote')}px</span>`)}
+        ${row('Emotes de 7TV, BTTV y FFZ', 'Además de los de Twitch, como en Chatterino. Apagado: solo los de Twitch', `<button class="sw" id="sTp"></button>`)}
         ${row('Hora en cada mensaje', '', `<button class="sw" id="sTs"></button>`)}
         ${row('Insignias', '', `<button class="sw" id="sBd"></button>`)}
         ${row('Líneas separadoras', '', `<button class="sw" id="sSep"></button>`)}
@@ -137,7 +138,7 @@ const Settings = (() => {
     seg('sRound', v => set('round', v === '1'));
     seg('sUiFont', v => set('uiFont', v));
     tog('sAcr', 'acrylic', v => zen.win('acrylic', v));
-tog('sTs', 'timestamps', () => Chat.rerender()); tog('sBd', 'badges', () => Chat.rerender()); tog('sSep', 'separators'); tog('sAlt', 'altRows');
+tog('sTs', 'timestamps', () => Chat.rerender()); tog('sTp', 'thirdParty', () => toast('Se nota en los mensajes nuevos')); tog('sBd', 'badges', () => Chat.rerender()); tog('sSep', 'separators'); tog('sAlt', 'altRows');
     tog('sModB', 'modButtons'); tog('sPH', 'pauseHover'); tog('sHist', 'history'); tog('sDel', 'hideDeleted'); tog('sEvL', 'eventLines');
     tog('sNm', 'notifyMention'); tog('sNe', 'notifyEvents'); tog('sAct', 'activity'); tog('sTop', 'onTop', v => { zen.win('top', v); $('wPin').classList.toggle('on', v); });
     $('sQto').onchange = e => { set('quickTo', +e.target.value); Chat.rerender(); };

@@ -1,5 +1,7 @@
 # ZenChat
 
+![ZenChat](docs/banner.png)
+
 ZenChat es mi app para hacer directos en Twitch. Es el chat al estilo Chatterino (cuadradito, compacto, con su tarjeta de usuario y los botones de moderar a mano) con paneles de cristal translúcidos, y además hace las alertas de OBS con sus sonidos: follows, subs, bits, raids, puntos del canal, hype train y lo demás. También hay APK para leer el chat en el móvil y sacar clips en vertical para TikTok con un botón.
 
 ![](docs/capturas/chat.jpg)

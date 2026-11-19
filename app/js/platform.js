@@ -93,14 +93,21 @@
     notify: async () => A.vibrate(40), flash: async () => A.vibrate(25),
     win: async () => ({}),
     update: async what => {
-      if (what === 'install') { A.open('https://github.com/luckicla/ZenChat/releases/download/android-latest/ZenChat.apk'); return null; }
+      if (what === 'install') { A.installApk('https://github.com/luckicla/ZenChat/releases/download/android-latest/ZenChat.apk'); return { state: 'downloading', pct: 0 }; }
       const r = await http('GET', 'https://github.com/luckicla/ZenChat/releases/download/android-latest/version.txt');
       const v = JSON.parse(A.version());
       const latest = parseInt(String(r.text || '').trim(), 10);
       return latest > v.code ? { state: 'portable', version: '1.0.' + latest } : { state: r.status === 200 ? 'none' : 'error', msg: 'sin conexión' };
     },
     updState: async () => null,
-    onWin: () => {}, onClients: () => {}, onOverlay: () => {}, onUpdate: () => {},
+    onWin: () => {}, onClients: () => {}, onOverlay: () => {},
+    onUpdate: cb => { updCbs.push(cb); },
+  };
+  // cómo va la actualización de la APK (Bridge.installApk)
+  const updCbs = [];
+  window.__zenUpd = s => {
+    const m = { bajando: { state: 'downloading', pct: s.pct }, listo: { state: 'apk' }, permiso: { state: 'perm' }, error: { state: 'error', msg: s.msg } }[s.state];
+    if (m) updCbs.forEach(f => { try { f(m); } catch {} });
   };
   // el botón «atrás» de Android: cierra lo que haya abierto antes de salir
   window.zenBack = () => {

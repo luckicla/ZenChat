@@ -96,6 +96,42 @@ class Bridge(private val act: MainActivity) {
         }
     }
 
+    // actualizarse: baja la APK nueva y abre el instalador de Android
+    @JavascriptInterface fun installApk(url: String) {
+        pool.execute {
+            try {
+                if (Build.VERSION.SDK_INT >= 26 && !act.packageManager.canRequestPackageInstalls()) {
+                    act.runOnUiThread {
+                        act.startActivity(Intent(android.provider.Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, Uri.parse("package:" + act.packageName)))
+                    }
+                    act.js("window.__zenUpd && window.__zenUpd({state:'permiso'})")
+                    return@execute
+                }
+                val f = File(act.cacheDir, "ZenChat-nueva.apk")
+                client.newCall(okhttp3.Request.Builder().url(url).build()).execute().use { r ->
+                    if (!r.isSuccessful) throw Exception("GitHub dijo " + r.code)
+                    val body = r.body ?: throw Exception("vacía")
+                    val total = body.contentLength()
+                    body.byteStream().use { input -> f.outputStream().use { out ->
+                        val buf = ByteArray(64 * 1024); var n: Int; var done = 0L; var last = -1
+                        while (input.read(buf).also { n = it } >= 0) {
+                            out.write(buf, 0, n); done += n
+                            if (total > 0) { val p = (done * 100 / total).toInt(); if (p != last) { last = p; act.js("window.__zenUpd && window.__zenUpd({state:'bajando',pct:$p})") } }
+                        }
+                    } }
+                }
+                val uri = androidx.core.content.FileProvider.getUriForFile(act, act.packageName + ".files", f)
+                act.runOnUiThread {
+                    act.startActivity(Intent(Intent.ACTION_VIEW).setDataAndType(uri, "application/vnd.android.package-archive")
+                        .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK))
+                }
+                act.js("window.__zenUpd && window.__zenUpd({state:'listo'})")
+            } catch (e: Exception) {
+                act.js("window.__zenUpd && window.__zenUpd({state:'error',msg:${JSONObject.quote(e.message ?: "error")}})")
+            }
+        }
+    }
+
     @JavascriptInterface fun view(uri: String) {
         act.runOnUiThread {
             try {

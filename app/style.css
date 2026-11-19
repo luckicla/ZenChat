@@ -42,7 +42,7 @@ html.acrylic .bg::before{opacity:.5}
 .tbar button,.tbar .tabs,.tbar .live{-webkit-app-region:no-drag}
 .tb-sp{flex:1;min-width:20px}
 .logo{display:flex;align-items:center;gap:7px;margin:0 12px 0 2px;font-size:13px;font-weight:700;letter-spacing:.2px;white-space:nowrap}
-.logo i{width:16px;height:16px;border-radius:4px;background:linear-gradient(135deg,var(--a1),var(--a2));box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)}
+.logo img{width:20px;height:20px;display:block}
 .tabs{display:flex;align-items:stretch;min-width:0;overflow-x:auto;scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
 .tab{position:relative;display:flex;align-items:center;gap:6px;padding:0 10px 0 12px;color:var(--dim);font-weight:600;font-size:12.5px;white-space:nowrap;border-right:1px solid var(--line);transition:background .12s,color .12s}
@@ -371,3 +371,7 @@ html.android .complete{bottom:56px}
 html.android .picker{bottom:56px;height:300px}
 html.android .row > label,html.android .row > .lb{flex-basis:100%}
 html.android .ctx button{padding:11px 16px;font-size:14px}
+
+/* hay versión nueva */
+.upd{display:flex;align-items:center;gap:6px;margin:7px 4px;padding:0 10px;border-radius:10px;font-size:11.5px;font-weight:600;color:#fff;background:rgba(var(--a1-rgb),.85);-webkit-app-region:no-drag}
+.upd:hover{filter:brightness(1.1)}

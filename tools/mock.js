@@ -14,7 +14,15 @@
     adriisco: { id: '114728904', login: 'adriisco', display_name: 'adriisco', created_at: '2016-02-03T10:00:00Z', profile_image_url: svg('#5cc8ff', 'A', 120, 120), broadcaster_type: '' },
   };
   const user = l => users[l] || { id: String(1000 + l.length * 7), login: l, display_name: l, created_at: '2019-06-11T10:00:00Z', profile_image_url: svg('#ffb547', l[0].toUpperCase(), 120, 120), broadcaster_type: l === 'juansguarnizo' || l === 'ibai' ? 'partner' : '' };
-  const BADGES = [
+  const REAL = !!window.ZEN_DEMO_REAL;
+  const RB = id => 'https://static-cdn.jtvnw.net/badges/v1/' + id + '/2';
+  const BADGES = REAL ? [
+    { set_id: 'broadcaster', versions: [{ id: '1', image_url_2x: RB('5527c58c-fb7d-422d-b71b-f309dcb85cc1'), title: 'Broadcaster' }] },
+    { set_id: 'moderator', versions: [{ id: '1', image_url_2x: RB('3267646d-33f0-4b17-b3df-f923a41db1d0'), title: 'Moderator' }] },
+    { set_id: 'vip', versions: [{ id: '1', image_url_2x: RB('b817aba4-fad8-49e2-b88a-7cc744dfa6ec'), title: 'VIP' }] },
+    { set_id: 'subscriber', versions: [{ id: '12', image_url_2x: RB('5d9f2208-5dd8-11e7-8513-2ff4adfae661'), title: 'Subscriber' }, { id: '0', image_url_2x: RB('5d9f2208-5dd8-11e7-8513-2ff4adfae661'), title: 'Subscriber' }] },
+    { set_id: 'premium', versions: [{ id: '1', image_url_2x: RB('bbbe0db0-a598-423e-86d0-f9fb98ca1933'), title: 'Prime Gaming' }] },
+  ] : [
     { set_id: 'broadcaster', versions: [{ id: '1', image_url_2x: svg('#e91916', '▶', 36, 36), title: 'Streamer' }] },
     { set_id: 'moderator', versions: [{ id: '1', image_url_2x: svg('#00ad03', '⚔', 36, 36), title: 'Moderador' }] },
     { set_id: 'vip', versions: [{ id: '1', image_url_2x: svg('#e005b9', '◆', 36, 36), title: 'VIP' }] },
@@ -41,6 +49,7 @@
       return { status: 204, json: null };
     },
     get: async url => {
+      if (REAL && !url.includes('ivr.fi')) { try { const r = await fetch(url); return { status: r.status, json: await r.json() }; } catch { return { status: 0, json: null }; } }
       if (url.includes('7tv.io/v3/emote-sets/global')) return { status: 200, json: { emotes: ['EZ', 'Clap', 'catJAM', 'peepoHappy', 'OMEGALUL'].map(n => ({ name: n, flags: 0, data: { host: { url: '//cdn.7tv.app/emote/' + n, files: [{ name: '2x.webp' }] } } })) } };
       if (url.includes('api.ivr.fi/v2/twitch/subage')) return { status: 200, json: { followedAt: '2020-01-25T10:00:00Z', cumulative: { months: 14 }, streak: { months: 3 }, meta: { tier: '1', type: 'prime' } } };
       return { status: 404, json: null };
@@ -62,18 +71,18 @@
   const SCRIPT = [
     msg('nightbot', '¡Bienvenidos al directo! Usad !discord para entrar al server', { badges: 'moderator/1', color: '#7C7CE1' }),
     msg('lisliismau', 'holaaa buenas tardes 👋', { color: '#FF69B4', badges: 'subscriber/12' }),
-    msg('gitano_peludo', 'danirep es furro', { color: '#1E90FF' }),
+    msg('gitano_peludo', 'danirep es furro LUL', { color: '#1E90FF', emotes: '425618:17-19' }),
     msg('carlos_9oc', 'y carraspear EZ', { color: '#9ACD32', badges: 'premium/1' }),
-    msg('jvc_bonzao', 'cómo va el directo? catJAM catJAM', { color: '#FF4500' }),
+    msg('jvc_bonzao', 'cómo va el directo? PogChamp catJAM', { color: '#FF4500', emotes: '305954156:20-27' }),
     msg('adriisco', '14 meses en esta mierda', { color: '#00FF7F', badges: 'subscriber/12', tags: { 'msg-id': 'resub' } }),
     msg('mixtapenofreestyle', 'MIXTAPE ON FIRE Clap Clap', { color: '#DAA520', badges: 'vip/1' }),
-    msg('igarrycl', 'Ladia mi perrita rika', { color: '#D2691E' }),
+    msg('igarrycl', 'Ladia mi perrita rika <3', { color: '#D2691E', emotes: '555555584:22-23' }),
     msg('peepo_fan', 'primera vez que entro, qué buena pinta tiene esto peepoHappy', { color: '#5F9EA0', tags: { 'first-msg': '1' } }),
     msg('elsoto_', '@luckicla qué app es esa del chat??', { color: '#B22222' }),
     msg('luckicla', 'ZenChat, la he hecho yo 😎', { color: '#FF6FD8', badges: 'broadcaster/1' }),
     msg('spammer123', 'COMPRA SEGUIDORES BARATOS en bit.ly/xxxx', { color: '#2E8B57' }),
     L({ 'target-msg-id': 'm12', login: 'spammer123' }, ':tmi.twitch.tv CLEARMSG #luckicla :COMPRA'),
-    msg('mixtapenofreestyle', 'jajajaja OMEGALUL', { color: '#DAA520', badges: 'vip/1', tags: { 'reply-parent-msg-id': 'm3', 'reply-parent-display-name': 'gitano_peludo', 'reply-parent-msg-body': 'danirep es furro' } }),
+    msg('mixtapenofreestyle', 'jajajaja LUL LUL', { color: '#DAA520', badges: 'vip/1', emotes: '425618:9-11,13-15', tags: { 'reply-parent-msg-id': 'm3', 'reply-parent-display-name': 'gitano_peludo', 'reply-parent-msg-body': 'danirep es furro' } }),
     L({ 'badge-info': '', badges: 'subscriber/0', color: '#8A2BE2', 'display-name': 'pepito_grillo', login: 'pepito_grillo', 'msg-id': 'resub', 'system-msg': 'pepito_grillo se ha suscrito con Prime. ¡Lleva 6 meses suscrito!', 'room-id': '1', 'tmi-sent-ts': now - 6e3, id: 'u1' }, ':tmi.twitch.tv USERNOTICE #luckicla :vamos que seguimos'),
     msg('lisliismau', 'Kappa jajaj', { color: '#FF69B4', badges: 'subscriber/12', emotes: '25:0-4' }),
     L({ 'ban-duration': '600', 'room-id': '1', 'target-user-id': '99', 'tmi-sent-ts': now }, ':tmi.twitch.tv CLEARCHAT #luckicla :spammer123'),

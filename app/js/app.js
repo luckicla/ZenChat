@@ -68,6 +68,27 @@ const App = (() => {
       setTimeout(() => { setView('settings'); toast('Bienvenid@ a ZenChat: entra con tu cuenta de Twitch para empezar'); }, 400);
     }
     Events.overlayState();
+    // actualizaciones: en el PC se bajan solas; aquí solo se enseña el botón.
+    // En el móvil se mira al abrir y luego cada 6 horas.
+    const upd = s => {
+      if (!s) return;
+      const b = $('updBtn'), t = b.querySelector('span');
+      const show = ['ready', 'portable', 'downloading', 'apk', 'perm'].includes(s.state);
+      b.hidden = !show;
+      if (s.state === 'ready') t.textContent = 'Reiniciar y actualizar';
+      if (s.state === 'portable') t.textContent = 'Actualizar a ' + (s.version || 'la nueva');
+      if (s.state === 'downloading') t.textContent = 'Bajando ' + (s.pct || 0) + '%';
+      if (s.state === 'apk') t.textContent = 'Instalar';
+      if (s.state === 'perm') { t.textContent = 'Actualizar'; toast('Permite «Instalar apps desconocidas» a ZenChat y dale otra vez a Actualizar'); }
+      if (s.state === 'error' && s.msg) toast('No se pudo actualizar: ' + s.msg, true);
+    };
+    zen.onUpdate(upd);
+    zen.updState().then(upd);
+    $('updBtn').onclick = async () => upd(await zen.update('install'));
+    if (document.documentElement.classList.contains('android')) {
+      const check = async () => { const s = await zen.update('check'); if (s && s.state === 'portable') { upd(s); toast('Hay una versión nueva de ZenChat: dale a «Actualizar» arriba'); } };
+      setTimeout(check, 4000); setInterval(check, 6 * 3600e3);
+    }
   }
   return { boot, view: setView, authChanged, setLive, mainChannel, syncMe };
 })();

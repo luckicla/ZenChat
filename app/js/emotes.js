@@ -76,6 +76,7 @@ const Emotes = (() => {
     }).filter(Boolean);
   }
   function third(roomId, word) {
+    if (!Cfg.ui('thirdParty', true)) return null;
     const r = rooms.get(roomId);
     return (r && r.third.get(word)) || global.third.get(word) || null;
   }
@@ -131,6 +132,7 @@ const Emotes = (() => {
   function all(roomId) {
     const out = new Map();
     for (const [k, v] of mine) out.set(k, v);
+    if (!Cfg.ui('thirdParty', true)) return [...out.values()];
     const r = rooms.get(roomId);
     if (r) for (const [k, v] of r.third) if (!out.has(k)) out.set(k, { ...v, ch: true });
     for (const [k, v] of global.third) if (!out.has(k)) out.set(k, v);
