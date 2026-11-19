@@ -204,7 +204,11 @@ tog('sTs', 'timestamps', () => Chat.rerender()); tog('sTp', 'thirdParty', () => 
       if (!$('page-settings').hidden) open();
     } catch (e) {
       const st = b.querySelector('#lSt');
-      if (st) { st.style.color = '#ff8f8f'; st.textContent = String(e.message || e).replace(/^Error invoking remote method '[^']+': (Error: )?/, ''); }
+      if (st && !$('modal').hidden) {
+        st.style.color = '#ff8f8f'; st.textContent = String(e.message || e).replace(/^Error invoking remote method '[^']+': (Error: )?/, '');
+        st.insertAdjacentHTML('afterend', '<div class="btns"><button class="btn" id="lRetry">Volver a intentarlo</button></div>');
+        $('lRetry').onclick = () => { Modal.close(); login(); };
+      }
     }
   }
   const set = (k, v) => { Cfg.setUi(k, v); apply(); };

@@ -70,15 +70,23 @@
       return r.json;
     },
     loginPoll: async dc => {
-      let wait = (dc.interval || 5) * 1000;
+      let wait = (dc.interval || 5) * 1000, fails = 0;
       const until = Date.now() + (dc.expires_in || 1800) * 1000;
       while (Date.now() < until) {
         await new Promise(r => setTimeout(r, wait));
         if (cancelled) throw new Error('cancelado');
         const r = await http('POST', 'https://id.twitch.tv/oauth2/token', FORM, form({ client_id: cid(), scopes: ZEN_SCOPES.join(' '), device_code: dc.device_code, grant_type: 'urn:ietf:params:oauth:grant-type:device_code' }));
         if (r.status === 200 && r.json && r.json.access_token) { const a = await saveToken(r.json, true); return { login: a.login, id: a.id, name: a.name, avatar: a.avatar }; }
-        const m = String((r.json && r.json.message) || '');
-        if (m.includes('slow_down')) wait += 2000; else if (!m.includes('authorization_pending')) throw new Error(m || 'Twitch dijo que no');
+        const m = String((r.json && (r.json.message || r.json.error)) || '').toLowerCase();
+        // (sin respuesta: el móvil estaba en Twitch o sin red; se sigue esperando)
+        if (!r.status || r.status >= 500 || !m) { fails++; if (fails > 30) throw new Error('No hay conexión con Twitch'); continue; }
+        fails = 0;
+        if (m.includes('slow_down')) { wait += 2000; continue; }
+        if (m.includes('authorization_pending')) continue;
+        if (m.includes('denied')) throw new Error('En Twitch le diste a cancelar: vuelve a intentarlo');
+        if (m.includes('invalid device code') || m.includes('expired')) throw new Error('El código caducó: vuelve a darle a Entrar');
+        if (m.includes('client')) throw new Error('Twitch no acepta ese ID de cliente (¿la app es de tipo «Público»?): ' + m);
+        throw new Error('Twitch: ' + m);
       }
       throw new Error('Se acabó el tiempo');
     },

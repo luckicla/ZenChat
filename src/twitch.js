@@ -14,9 +14,11 @@ class Twitch {
   get auth() { return this.store.get('auth') || null; }
 
   async post(url, form) {
-    const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(form).toString() });
-    let j = {}; try { j = await r.json(); } catch {}
-    return { status: r.status, json: j };
+    try {
+      const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(form).toString() });
+      let j = {}; try { j = await r.json(); } catch {}
+      return { status: r.status, json: j || {} };
+    } catch { return { status: 0, json: {} }; }
   }
 
   // 1) pide el código → { user_code, verification_uri, device_code, interval, expires_in }
@@ -38,9 +40,14 @@ class Twitch {
         grant_type: 'urn:ietf:params:oauth:grant-type:device_code',
       });
       if (r.status === 200 && r.json.access_token) return this.saveToken(r.json, true);
-      const m = String(r.json.message || '');
-      if (m.includes('slow_down')) wait += 2000;
-      else if (!m.includes('authorization_pending')) throw new Error(m || 'Twitch dijo que no');
+      const m = String(r.json.message || r.json.error || '').toLowerCase();
+      if (!r.status || r.status >= 500 || !m) continue;
+      if (m.includes('slow_down')) { wait += 2000; continue; }
+      if (m.includes('authorization_pending')) continue;
+      if (m.includes('denied')) throw new Error('En Twitch le diste a cancelar: vuelve a intentarlo');
+      if (m.includes('invalid device code') || m.includes('expired')) throw new Error('El código caducó: vuelve a darle a Entrar');
+      if (m.includes('client')) throw new Error('Twitch no acepta ese ID de cliente (¿la app es de tipo «Público»?): ' + m);
+      throw new Error('Twitch: ' + m);
     }
     throw new Error('Se acabó el tiempo para aceptar el código');
   }
