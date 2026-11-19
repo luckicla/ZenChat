@@ -52,7 +52,7 @@ function createWindow() {
   win = new BrowserWindow({
     width: b.width || 1180, height: b.height || 760, x: b.x, y: b.y,
     minWidth: 380, minHeight: 420,
-    backgroundColor: acrylic ? '#00000000' : '#0a0a0d',
+    backgroundColor: acrylic ? '#00000000' : '#0e0f13',
     ...(acrylic ? { backgroundMaterial: 'acrylic' } : {}),
     title: 'ZenChat',
     icon: iconPath(),
@@ -157,7 +157,7 @@ ipcMain.handle('zen', async (_e, what, a, b, c) => {
       else if (a === 'close') win.close();
       else if (a === 'top') win.setAlwaysOnTop(!!b);
       else if (a === 'acrylic' && process.platform === 'win32') {
-        try { win.setBackgroundMaterial(b ? 'acrylic' : 'none'); win.setBackgroundColor(b ? '#00000000' : '#0a0a0d'); } catch {}
+        try { win.setBackgroundMaterial(b ? 'acrylic' : 'none'); win.setBackgroundColor(b ? '#00000000' : '#0e0f13'); } catch {}
       } else if (a === 'opacity') { try { win.setOpacity(Math.min(1, Math.max(0.3, +b || 1))); } catch {} }
       return { max: win.isMaximized(), top: win.isAlwaysOnTop() };
     case 'update': if (a === 'install') return installUpdate(); checkUpdates(true); return updState;

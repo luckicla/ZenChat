@@ -2,8 +2,9 @@
 // Ajustes: la cuenta de Twitch, el aspecto (colores, cristal, fondo), el chat,
 // las menciones, la ventana y las actualizaciones.
 const THEMES = [
-  { id: 'zen', name: 'Zen (MixUp)', bg: '#0a0a0d', a1: '#ff6fd8', a2: '#1ec8ff', a3: '#ffa62b' },
-  { id: 'neon', name: 'Neón', bg: '#0a0a0d', a1: '#c8ff00', a2: '#ff2e88', a3: '#1b6dff' },
+  { id: 'zen', name: 'Cristal', bg: '#0e0f13', a1: '#8b7bff', a2: '#5cc8ff', a3: '#ffb547' },
+  { id: 'ocean', name: 'Océano', bg: '#0b1220', a1: '#3b82f6', a2: '#22d3ee', a3: '#f59e0b' },
+  { id: 'rose', name: 'Rosa', bg: '#140d12', a1: '#f472b6', a2: '#a78bfa', a3: '#fbbf24' },
   { id: 'midnight', name: 'Medianoche', bg: '#070b14', a1: '#38e8ff', a2: '#a17bff', a3: '#ff4f7a' },
   { id: 'synth', name: 'Synthwave', bg: '#150a20', a1: '#ff9a3c', a2: '#ff3cac', a3: '#4de8ff' },
   { id: 'vapor', name: 'Vaporwave', bg: '#1b1035', a1: '#ff71ce', a2: '#01cdfe', a3: '#05ffa1' },
@@ -33,7 +34,7 @@ const Settings = (() => {
     st.setProperty('--emote', u('emote') + 'px');
     st.setProperty('--badge', Math.round(u('fs') * 1.35) + 'px');
     st.setProperty('--r', u('round') ? '6px' : '2px');
-    st.setProperty('--ui', { grotesk: "'Space Grotesk',system-ui,sans-serif", system: "'Segoe UI',system-ui,sans-serif", mono: "'Space Mono',Consolas,monospace" }[u('uiFont')] || "'Space Grotesk',system-ui,sans-serif");
+    st.setProperty('--ui', { inter: "'Inter','Segoe UI',system-ui,sans-serif", system: "'Segoe UI',system-ui,sans-serif", mono: "'JetBrains Mono',Consolas,monospace" }[u('uiFont')] || "'Inter','Segoe UI',system-ui,sans-serif");
     st.setProperty('--bgblur', u('bgBlur') + 'px');
     st.setProperty('--bgop', u('bgOp'));
     $('bgImg').src = u('bgImg') ? mediaUrl(u('bgImg')) : '';
@@ -42,7 +43,6 @@ const Settings = (() => {
     root.classList.toggle('nots', !u('timestamps'));
     root.classList.toggle('alt', !!u('altRows'));
     root.classList.toggle('sep', !!u('separators'));
-    root.classList.toggle('nohazard', !u('hazard'));
     root.classList.toggle('modbtns', !!u('modButtons'));
     root.classList.toggle('hidedel', !!u('hideDeleted'));
     root.classList.toggle('noact', !u('activity'));
@@ -50,8 +50,8 @@ const Settings = (() => {
     $('actBtn').classList.toggle('on', !!u('activity'));
   }
   const DEF = {
-    theme: 'zen', a1: '', a2: '', a3: '', glass: 0.72, blur: 18, fs: 13, emote: 28, round: false, uiFont: 'grotesk',
-    bgImg: '', bgBlur: 30, bgOp: 0.5, acrylic: false, timestamps: true, badges: true, altRows: false, separators: true, hazard: true,
+    theme: 'zen', a1: '', a2: '', a3: '', glass: 0.72, blur: 18, fs: 13, emote: 28, round: false, uiFont: 'inter',
+    bgImg: '', bgBlur: 30, bgOp: 0.5, acrylic: false, timestamps: true, badges: true, altRows: false, separators: true,
     modButtons: true, hideDeleted: false, activity: true, pauseHover: true, history: true, historyN: 100, eventLines: true,
     clipLen: 30, clipPos: 'center', clipFab: true,
     hlWords: [], mentionSound: 'synth:blip', mentionVol: 0.6, notifyMention: true, notifyEvents: false, quickTo: 600, onTop: false, opacity: 1,
@@ -74,8 +74,7 @@ const Settings = (() => {
         ${row('Imagen de fondo', 'Se ve detrás del cristal, desenfocada', `<button class="btn sm ghost" id="sBg">Elegir…</button>${u('bgImg') ? '<button class="btn sm ghost" id="sBgX">Quitar</button>' : ''}<input type="range" min="0" max="80" id="sBgBlur" value="${u('bgBlur')}" title="Desenfoque"><input type="range" min="0.1" max="1" step="0.05" id="sBgOp" value="${u('bgOp')}" title="Intensidad">`)}
         ${row('Transparencia de Windows', 'Acrílico: se ve tu escritorio detrás de la ventana (Windows 11)', `<button class="sw" id="sAcr"></button>`)}
         ${row('Esquinas', '', `<div class="seg" id="sRound"><button data-v="0" class="${!u('round') ? 'sel' : ''}">Cuadradas</button><button data-v="1" class="${u('round') ? 'sel' : ''}">Un poco redondas</button></div>`)}
-        ${row('Letra de la app', '', `<div class="seg" id="sUiFont">${[['grotesk', 'Grotesk'], ['system', 'Windows'], ['mono', 'Mono']].map(([k, n]) => `<button data-v="${k}" class="${u('uiFont') === k ? 'sel' : ''}">${n}</button>`).join('')}</div>`)}
-        ${row('Rayas de peligro', 'La franja de arriba', `<button class="sw" id="sHaz"></button>`)}
+        ${row('Letra de la app', '', `<div class="seg" id="sUiFont">${[['inter', 'Inter'], ['system', 'Windows'], ['mono', 'Mono']].map(([k, n]) => `<button data-v="${k}" class="${u('uiFont') === k ? 'sel' : ''}">${n}</button>`).join('')}</div>`)}
       </div>
       <div class="sec">Chat</div>
       <div class="box">
@@ -138,7 +137,7 @@ const Settings = (() => {
     seg('sRound', v => set('round', v === '1'));
     seg('sUiFont', v => set('uiFont', v));
     tog('sAcr', 'acrylic', v => zen.win('acrylic', v));
-    tog('sHaz', 'hazard'); tog('sTs', 'timestamps', () => Chat.rerender()); tog('sBd', 'badges', () => Chat.rerender()); tog('sSep', 'separators'); tog('sAlt', 'altRows');
+tog('sTs', 'timestamps', () => Chat.rerender()); tog('sBd', 'badges', () => Chat.rerender()); tog('sSep', 'separators'); tog('sAlt', 'altRows');
     tog('sModB', 'modButtons'); tog('sPH', 'pauseHover'); tog('sHist', 'history'); tog('sDel', 'hideDeleted'); tog('sEvL', 'eventLines');
     tog('sNm', 'notifyMention'); tog('sNe', 'notifyEvents'); tog('sAct', 'activity'); tog('sTop', 'onTop', v => { zen.win('top', v); $('wPin').classList.toggle('on', v); });
     $('sQto').onchange = e => { set('quickTo', +e.target.value); Chat.rerender(); };

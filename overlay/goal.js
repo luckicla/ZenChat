@@ -14,8 +14,8 @@
     if (!g) return;
     const cur = (+g.start || 0) + (+st[g.id] || 0);
     const pct = Math.max(0, Math.min(100, (cur / Math.max(1, +g.target || 1)) * 100));
-    el.style.setProperty('--a1', g.a1 || '#ff6fd8');
-    el.style.setProperty('--a2', g.a2 || '#1ec8ff');
+    el.style.setProperty('--a1', g.a1 || '#a99bff');
+    el.style.setProperty('--a2', g.a2 || '#5cc8ff');
     el.style.setProperty('--font', ZenAlerts.FONTS[g.font] || ZenAlerts.FONTS.grotesk);
     el.querySelector('.tt').textContent = g.title || 'Objetivo';
     el.querySelector('.pc').textContent = Math.floor(pct) + '%';

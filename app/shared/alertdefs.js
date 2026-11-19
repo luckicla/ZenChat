@@ -27,7 +27,7 @@
     return {
       on: t.on !== false, dur: 7, layout: 'stack', style: 'card', anim: 'pop',
       img: '', imgSize: 280, sound: t.sound, vol: 0.8,
-      text: t.text, sub: t.sub, font: 'grotesk', size: 58, color: '#ff6fd8', color2: '#1ec8ff', textColor: '#ece6d6',
+      text: t.text, sub: t.sub, font: 'inter', size: 58, color: '#a99bff', color2: '#5cc8ff', textColor: '#ffffff',
       min: 0, tts: false, ttsMin: 0, vars: [], rewards: {},
     };
   }
@@ -95,14 +95,14 @@
     return { id: 'test-' + Date.now(), type, user: u, test: true, ...s };
   }
   const FONTS = {
-    grotesk: "'Space Grotesk',system-ui,sans-serif", vt: "'VT323',monospace", display: "'Anton',Impact,sans-serif",
+    inter: "'Inter','Segoe UI',system-ui,sans-serif", grotesk: "'Space Grotesk',system-ui,sans-serif", vt: "'VT323',monospace", display: "'Anton',Impact,sans-serif",
     black: "'Archivo Black','Arial Black',sans-serif", bungee: "'Bungee','Arial Black',sans-serif", marker: "'Permanent Marker',cursive",
     pixel: "'Silkscreen',monospace", retro: "'Righteous',sans-serif", play: "'Playfair Display',Georgia,serif", bebas: "'Bebas Neue',Impact,sans-serif",
     mono: "'Space Mono',Consolas,monospace", rubik: "'Rubik Mono One','Arial Black',sans-serif",
   };
-  const FONT_NAMES = { grotesk: 'Grotesk', vt: 'VT323', display: 'Anton', black: 'Archivo Black', bungee: 'Bungee', marker: 'Rotulador', pixel: 'Píxel', retro: 'Righteous', play: 'Playfair', bebas: 'Bebas', mono: 'Mono', rubik: 'Rubik Mono' };
-  const FONTS_URL = 'https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Black&family=Bungee&family=Permanent+Marker&family=Silkscreen&family=Righteous&family=Playfair+Display:ital,wght@1,900&family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Rubik+Mono+One&family=VT323&family=Space+Grotesk:wght@400;500;600;700&display=swap';
-  const ANIMS = { pop: 'Pop', slide: 'Deslizar', drop: 'Caer', zoom: 'Zoom', bounce: 'Rebote', fade: 'Fundido', glitch: 'Glitch', spin: 'Giro' };
+  const FONT_NAMES = { inter: 'Inter', grotesk: 'Grotesk', vt: 'VT323', display: 'Anton', black: 'Archivo Black', bungee: 'Bungee', marker: 'Rotulador', pixel: 'Píxel', retro: 'Righteous', play: 'Playfair', bebas: 'Bebas', mono: 'Mono', rubik: 'Rubik Mono' };
+  const FONTS_URL = 'https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Black&family=Bungee&family=Permanent+Marker&family=Silkscreen&family=Righteous&family=Playfair+Display:ital,wght@1,900&family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Rubik+Mono+One&family=VT323&family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap';
+  const ANIMS = { pop: 'Pop', slide: 'Deslizar', drop: 'Caer', zoom: 'Zoom', bounce: 'Rebote', fade: 'Fundido', spin: 'Giro' };
 
   g.ZenAlerts = { TYPES, defaults, complete, fill, resolve, sample, esc, FONTS, FONT_NAMES, FONTS_URL, ANIMS };
 })(typeof window !== 'undefined' ? window : globalThis);

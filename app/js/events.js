@@ -3,7 +3,7 @@
 // de Actividad, a las alertas de OBS, a los objetivos y a los overlays.
 const Events = (() => {
   const CAT = { follow: 'follow', sub: 'sub', resub: 'sub', gift: 'sub', cheer: 'bits', raid: 'raid', points: 'points', powerup: 'points' };
-  const COLORS = { follow: '#ff6fd8', sub: '#1ec8ff', resub: '#1ec8ff', gift: '#ffa62b', cheer: '#b98cff', raid: '#ff5a5a', points: '#6ff0c0', powerup: '#6ff0c0', hypetrain: '#ffd166', charity: '#ffd166', firstchat: '#6ff0c0', streak: '#ff9a3c', shoutout: '#1ec8ff' };
+  const COLORS = { follow: '#a99bff', sub: '#5cc8ff', resub: '#5cc8ff', gift: '#ffb547', cheer: '#b98cff', raid: '#ff5a5a', points: '#6ff0c0', powerup: '#6ff0c0', hypetrain: '#ffd166', charity: '#ffd166', firstchat: '#6ff0c0', streak: '#ff9a3c', shoutout: '#5cc8ff' };
   const FILTERS = [['all', 'Todo'], ['follow', 'Follows'], ['sub', 'Subs'], ['bits', 'Bits'], ['raid', 'Raids'], ['points', 'Puntos'], ['other', 'Otros']];
   let list = [], filter = 'all', clients = {}, esState = 'off';
 

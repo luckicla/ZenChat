@@ -57,7 +57,7 @@ const OverlaysUI = (() => {
   let clients = {};
   zen.onClients(c => { clients = c; const p = $('page-overlays'); if (p && !p.hidden) paintStatus(); });
   const save = (k, v) => Cfg.set(k, v);
-  const chatDefaults = { fs: 20, font: 'grotesk', fade: 0, max: 30, style: 'shadow', bga: 0.62, badges: true, hideCmds: true, hideBots: 'nightbot,streamelements,streamlabs,moobot,fossabot,wizebot', dir: 'bottom', textColor: '#ffffff', gap: 4, channel: '' };
+  const chatDefaults = { fs: 20, font: 'inter', fade: 0, max: 30, style: 'shadow', bga: 0.62, badges: true, hideCmds: true, hideBots: 'nightbot,streamelements,streamlabs,moobot,fossabot,wizebot', dir: 'bottom', textColor: '#ffffff', gap: 4, channel: '' };
 
   function card(id, title, desc, url, w, hgt, extra = '') {
     return `<div class="ovc" data-w="${id}"><h3>${title}<span class="on no" data-st="${id}">● sin abrir</span></h3><p>${desc}</p>
@@ -116,12 +116,12 @@ const OverlaysUI = (() => {
     $('cbBots').onchange = e => setCb('hideBots', e.target.value);
     sw($('cbBadges'), cb.badges, v => setCb('badges', v));
     sw($('cbCmds'), cb.hideCmds, v => setCb('hideCmds', v));
-    $('cbTest').onclick = () => zen.overlay('chat', { id: 't' + Date.now(), login: 'zentester', name: 'ZenTester', color: '#ff6fd8', badges: [], parts: [{ t: 'text', v: 'Hola chat, esto es una prueba de ZenChat ' }, { t: 'emote', v: 'Kappa', url: 'https://static-cdn.jtvnw.net/emoticons/v2/25/default/dark/2.0' }], text: 'prueba' }, 'chat');
+    $('cbTest').onclick = () => zen.overlay('chat', { id: 't' + Date.now(), login: 'zentester', name: 'ZenTester', color: '#a99bff', badges: [], parts: [{ t: 'text', v: 'Hola chat, esto es una prueba de ZenChat ' }, { t: 'emote', v: 'Kappa', url: 'https://static-cdn.jtvnw.net/emoticons/v2/25/default/dark/2.0' }], text: 'prueba' }, 'chat');
     // OBS
     const setO = () => { save('obs', { host: $('oHost').value.trim(), port: +$('oPort').value || 4455, password: $('oPass').value }); OBS.reset(); };
     ['oHost', 'oPort', 'oPass'].forEach(id => $(id).onchange = setO);
     $('oTest').onclick = async () => { setO(); $('oRes').textContent = 'conectando…'; try { await OBS.connect(); const v = await OBS.req('GetVersion'); $('oRes').innerHTML = `<span style="color:#6ff0c0">✓ OBS ${esc(v.obsVersion)}</span>`; } catch (e) { $('oRes').innerHTML = `<span style="color:#ff8f8f">${esc(e.message)}</span>`; } };
-    $('gAdd').onclick = () => { const g = Cfg.get('goals', []).slice(); g.push({ id: 'g' + Date.now().toString(36), title: 'Objetivo de follows', type: 'follows', target: 50, start: 0, a1: '#ff6fd8', a2: '#1ec8ff', font: 'grotesk' }); save('goals', g); paintGoals(); };
+    $('gAdd').onclick = () => { const g = Cfg.get('goals', []).slice(); g.push({ id: 'g' + Date.now().toString(36), title: 'Objetivo de follows', type: 'follows', target: 50, start: 0, a1: '#a99bff', a2: '#5cc8ff', font: 'inter' }); save('goals', g); paintGoals(); };
     paintGoals();
     paintStatus();
   }

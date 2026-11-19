@@ -10,7 +10,7 @@
   const esc = ZenAlerts.esc;
 
   Zen.on('config', all => {
-    c = { fs: 20, font: 'grotesk', fade: 0, max: 30, style: 'shadow', bga: 0.62, badges: true, hideCmds: true, hideBots: 'nightbot,streamelements,streamlabs,moobot,fossabot,wizebot', dir: 'bottom', textColor: '#ffffff', gap: 4, ...(all.chatbox || {}) };
+    c = { fs: 20, font: 'inter', fade: 0, max: 30, style: 'shadow', bga: 0.62, badges: true, hideCmds: true, hideBots: 'nightbot,streamelements,streamlabs,moobot,fossabot,wizebot', dir: 'bottom', textColor: '#ffffff', gap: 4, ...(all.chatbox || {}) };
     box.className = 'chatbox ' + (c.style === 'boxes' ? 'boxes' : c.style === 'glass' ? 'boxes glass' : 'shadow') + (c.dir === 'top' ? ' top' : '');
     box.style.setProperty('--fs', c.fs + 'px');
     box.style.setProperty('--font', ZenAlerts.FONTS[c.font] || ZenAlerts.FONTS.grotesk);
@@ -25,10 +25,10 @@
     const d = document.createElement('div');
     d.className = 'cm' + (m.action ? ' act' : '') + (m.hl ? ' hl' : '') + (m.sys ? ' sys' : '');
     d.dataset.id = m.id || ''; d.dataset.user = m.login || '';
-    d.style.setProperty('--nc', m.color || '#1ec8ff');
+    d.style.setProperty('--nc', m.color || '#5cc8ff');
     const badges = c.badges && m.badges ? m.badges.map(b => `<img class="bd" src="${esc(b.url)}" alt="">`).join('') : '';
     const body = (m.parts || [{ t: 'text', v: m.text }]).map(p => p.t === 'emote' ? `<img class="em" src="${esc(p.url)}" alt="${esc(p.v)}">` : esc(p.v)).join('');
-    d.innerHTML = m.sys ? `<span class="tx">${body}</span>` : `${badges}<span class="nm" style="color:${esc(m.color || '#1ec8ff')}">${esc(m.name)}</span>${m.action ? ' ' : ': '}<span class="tx">${body}</span>`;
+    d.innerHTML = m.sys ? `<span class="tx">${body}</span>` : `${badges}<span class="nm" style="color:${esc(m.color || '#5cc8ff')}">${esc(m.name)}</span>${m.action ? ' ' : ': '}<span class="tx">${body}</span>`;
     if (c.dir === 'top') box.prepend(d); else box.appendChild(d);
     while (box.children.length > (c.max || 30)) (c.dir === 'top' ? box.lastElementChild : box.firstElementChild).remove();
     if (c.fade > 0) setTimeout(() => { d.classList.add('gone'); setTimeout(() => d.remove(), 700); }, c.fade * 1000);

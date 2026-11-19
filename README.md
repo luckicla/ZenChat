@@ -1,6 +1,6 @@
 # ZenChat
 
-ZenChat es mi app para hacer directos en Twitch. Es el chat al estilo Chatterino (cuadradito, compacto, con su tarjeta de usuario y los botones de moderar a mano) con el aspecto de MixUp, y además hace las alertas de OBS con sus sonidos: follows, subs, bits, raids, puntos del canal, hype train y lo demás. También hay APK para leer el chat en el móvil y sacar clips en vertical para TikTok con un botón.
+ZenChat es mi app para hacer directos en Twitch. Es el chat al estilo Chatterino (cuadradito, compacto, con su tarjeta de usuario y los botones de moderar a mano) con paneles de cristal translúcidos, y además hace las alertas de OBS con sus sonidos: follows, subs, bits, raids, puntos del canal, hype train y lo demás. También hay APK para leer el chat en el móvil y sacar clips en vertical para TikTok con un botón.
 
 ![](docs/capturas/chat.jpg)
 
@@ -68,7 +68,7 @@ Cada push a `main` compila todo solo en GitHub Actions (`.github/workflows/build
 
 **Clips**: ✂ en cada canal (o Ctrl+Mayús+C) hace un clip. En el PC te da el enlace y el editor de Twitch. En el móvil se baja, se recorta a **vertical 1080×1920** (centro, izquierda o derecha) y se guarda en la galería, con botón para compartirlo directo en TikTok.
 
-**A tu gusto**: temas de color (el de MixUp de serie), paneles de cristal con el desenfoque que quieras, imagen de fondo, transparencia acrílica de Windows 11, siempre encima, opacidad de la ventana, tamaño de letra y emotes, esquinas…
+**A tu gusto**: temas de color, paneles de cristal con el desenfoque que quieras, imagen de fondo, transparencia acrílica de Windows 11, siempre encima, opacidad de la ventana, tamaño de letra y emotes, esquinas…
 
 ## Cómo está hecho
 

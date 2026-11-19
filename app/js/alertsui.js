@@ -79,7 +79,7 @@ const AlertsUI = (() => {
       </div>
       <div class="sec">Aspecto</div>
       <div class="box">
-        <div class="row"><div class="lb"><b>Estilo</b></div><div class="seg" id="eStyle">${[['card', 'Tarjeta'], ['clean', 'Limpio'], ['cut', 'Recorte']].map(([k, n]) => `<button data-v="${k}" class="${c.style === k ? 'sel' : ''}">${n}</button>`).join('')}</div></div>
+        <div class="row"><div class="lb"><b>Estilo</b></div><div class="seg" id="eStyle">${[['card', 'Cristal'], ['clean', 'Solo texto'], ['cut', 'Sólido']].map(([k, n]) => `<button data-v="${k}" class="${c.style === k ? 'sel' : ''}">${n}</button>`).join('')}</div></div>
         <div class="row"><div class="lb"><b>Distribución</b></div><div class="seg" id="eLay">${[['stack', 'Imagen arriba'], ['side', 'Al lado'], ['over', 'Texto encima']].map(([k, n]) => `<button data-v="${k}" class="${c.layout === k ? 'sel' : ''}">${n}</button>`).join('')}</div></div>
         <div class="row"><div class="lb"><b>Animación</b></div><select class="inp" id="eAnim">${Object.entries(ZenAlerts.ANIMS).map(([k, n]) => `<option value="${k}"${c.anim === k ? ' selected' : ''}>${n}</option>`).join('')}</select></div>
         <div class="row"><div class="lb"><b>Letra</b></div><select class="inp" id="eFont">${Object.entries(ZenAlerts.FONT_NAMES).map(([k, n]) => `<option value="${k}"${c.font === k ? ' selected' : ''}>${n}</option>`).join('')}</select><input type="range" min="20" max="110" id="eSize" value="${c.size}"></div>

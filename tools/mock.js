@@ -4,16 +4,16 @@
   const CTL = 'http://127.0.0.1:47831';
   const svg = (bg, txt, w = 36, h = 36) => 'data:image/svg+xml,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}"><rect width="100%" height="100%" rx="4" fill="${bg}"/><text x="50%" y="58%" font-family="Arial" font-weight="700" font-size="${h * 0.45}" fill="#111" text-anchor="middle" dominant-baseline="middle">${txt}</text></svg>`);
   const cfg = {
-    clientId: 'demo', auth: { ok: true, id: '1', login: 'luckicla', name: 'luckicla', avatar: svg('#ff6fd8', 'L', 80, 80) },
+    clientId: 'demo', auth: { ok: true, id: '1', login: 'luckicla', name: 'luckicla', avatar: svg('#a99bff', 'L', 80, 80) },
     ui: { tabs: [{ splits: ['luckicla', 'juansguarnizo'] }, { splits: ['ibai'] }], tab: 0, modMode: { luckicla: true } },
-    chatbox: {}, goals: [{ id: 'g1', title: 'Objetivo de follows', type: 'follows', target: 100, start: 64, a1: '#ff6fd8', a2: '#1ec8ff' }], goalCounts: { g1: 3 },
+    chatbox: {}, goals: [{ id: 'g1', title: 'Objetivo de follows', type: 'follows', target: 100, start: 64, a1: '#a99bff', a2: '#5cc8ff' }], goalCounts: { g1: 3 },
     activity: [],
   };
   const post = (u, b) => fetch(CTL + u, { method: 'POST', body: JSON.stringify(b) }).catch(() => {});
   const users = {
-    adriisco: { id: '114728904', login: 'adriisco', display_name: 'adriisco', created_at: '2016-02-03T10:00:00Z', profile_image_url: svg('#1ec8ff', 'A', 120, 120), broadcaster_type: '' },
+    adriisco: { id: '114728904', login: 'adriisco', display_name: 'adriisco', created_at: '2016-02-03T10:00:00Z', profile_image_url: svg('#5cc8ff', 'A', 120, 120), broadcaster_type: '' },
   };
-  const user = l => users[l] || { id: String(1000 + l.length * 7), login: l, display_name: l, created_at: '2019-06-11T10:00:00Z', profile_image_url: svg('#ffa62b', l[0].toUpperCase(), 120, 120), broadcaster_type: l === 'juansguarnizo' || l === 'ibai' ? 'partner' : '' };
+  const user = l => users[l] || { id: String(1000 + l.length * 7), login: l, display_name: l, created_at: '2019-06-11T10:00:00Z', profile_image_url: svg('#ffb547', l[0].toUpperCase(), 120, 120), broadcaster_type: l === 'juansguarnizo' || l === 'ibai' ? 'partner' : '' };
   const BADGES = [
     { set_id: 'broadcaster', versions: [{ id: '1', image_url_2x: svg('#e91916', '▶', 36, 36), title: 'Streamer' }] },
     { set_id: 'moderator', versions: [{ id: '1', image_url_2x: svg('#00ad03', '⚔', 36, 36), title: 'Moderador' }] },

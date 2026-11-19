@@ -5,14 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src * data: blob:; media-src * data: blob:; connect-src *; frame-src http://127.0.0.1:47830">
 <title>ZenChat</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Black&family=Bungee&family=Permanent+Marker&family=Playfair+Display:ital,wght@1,900&family=Rubik+Mono+One&family=Space+Mono:wght@400;700&family=Special+Elite&family=UnifrakturMaguntia&family=Silkscreen&family=Righteous&family=Bebas+Neue&family=VT323&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="bg" id="bg"><img id="bgImg" alt=""></div>
 
 <header class="tbar" id="tbar">
-  <h1 class="logo" aria-label="ZenChat"><span class="l1">Z</span><span class="l2">E</span><span class="l3">N</span><span class="l4">C</span><span class="l5">H</span><span class="l6">A</span><span class="l1">T</span></h1>
+  <h1 class="logo" aria-label="ZenChat"><i></i>ZenChat</h1>
   <nav class="tabs" id="tabs" aria-label="Pestañas"></nav>
   <button class="tb-b" id="tabAdd" title="Nueva pestaña (Ctrl+T)" aria-label="Nueva pestaña"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M12 5v14M5 12h14"/></svg></button>
   <i class="tb-sp"></i>
@@ -31,7 +31,6 @@
     <button class="tb-c tb-x" id="wClose" title="Cerrar" aria-label="Cerrar"><svg width="12" height="12" viewBox="0 0 12 12"><path d="M2.5 2.5l7 7M9.5 2.5l-7 7" stroke="currentColor" stroke-width="1.4"/></svg></button>
   </div>
 </header>
-<i class="hazard" id="hazard"></i>
 
 <div class="app" id="app">
   <main class="splits" id="splits"></main>

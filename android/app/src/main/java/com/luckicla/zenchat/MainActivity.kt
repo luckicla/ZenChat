@@ -32,7 +32,7 @@ class MainActivity : ComponentActivity() {
             .addPathHandler("/assets/", WebViewAssetLoader.AssetsPathHandler(this))
             .build()
         web = WebView(this)
-        web.setBackgroundColor(0xFF0A0A0D.toInt())
+        web.setBackgroundColor(0xFF0E0F13.toInt())
         with(web.settings) {
             javaScriptEnabled = true
             domStorageEnabled = true

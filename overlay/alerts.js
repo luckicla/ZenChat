@@ -56,7 +56,7 @@
       ? `<video class="media" src="${src}" autoplay muted playsinline loop></video>`
       : `<img class="media" src="${src}" alt="">`;
     const sub = ZenAlerts.fill(c.sub, ev, true);
-    el.innerHTML = `${media}<div class="txt"><div class="t1">${ZenAlerts.fill(c.text, ev, true)}</div>${sub ? `<div class="t2">${sub}</div>` : ''}</div><i class="hz"></i>`;
+    el.innerHTML = `${media}<div class="txt"><div class="t1">${ZenAlerts.fill(c.text, ev, true)}</div>${sub ? `<div class="t2">${sub}</div>` : ''}</div>`;
     if (src && !isVideo(src)) await new Promise(r => { const i = el.querySelector('img'); i.onload = i.onerror = r; setTimeout(r, 1500); });
     stage.appendChild(el);
     requestAnimationFrame(() => el.classList.add('in'));
