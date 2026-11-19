@@ -1,0 +1,101 @@
+/* Overlays de ZenChat para OBS. Fondo transparente siempre. */
+:root{--ink:#0a0a0d;--paper:#ece6d6;--pink:#ff6fd8;--cyan:#1ec8ff;--orange:#ffa62b;--muted:#8f897c}
+*{box-sizing:border-box}
+html,body{margin:0;background:transparent!important;overflow:hidden;color:var(--paper);font-family:'Space Grotesk',system-ui,sans-serif}
+html,body{width:100%;height:100%}
+
+/* ---------- alertas ---------- */
+.stage{position:fixed;inset:0;display:grid;place-items:center;padding:60px}
+body[data-pos=top] .stage{align-items:start}
+body[data-pos=bottom] .stage{align-items:end}
+body[data-pos=left] .stage{justify-items:start}
+body[data-pos=right] .stage{justify-items:end}
+.alert{position:relative;display:flex;flex-direction:column;align-items:center;gap:14px;max-width:min(1100px,92vw);color:var(--fg);font-family:var(--font);transform-origin:50% 60%;scale:var(--scale,1);opacity:0;grid-area:1/1}
+.alert.ly-side{flex-direction:row;text-align:left}
+.alert.ly-over{display:grid;place-items:center}
+.alert.ly-over > *{grid-area:1/1}
+.alert.ly-over .txt{align-self:end;margin-bottom:8%}
+.alert .media{width:var(--img);max-height:calc(var(--img) * 1.25);object-fit:contain;display:block;filter:drop-shadow(0 8px 24px rgba(0,0,0,.45))}
+.alert .txt{text-align:center;display:flex;flex-direction:column;gap:6px;align-items:center}
+.alert.ly-side .txt{align-items:flex-start;text-align:left}
+.alert .t1{font-size:var(--size);line-height:1.08;font-weight:700;letter-spacing:.3px;text-wrap:balance}
+.alert .t2{font-family:'Space Grotesk',system-ui,sans-serif;font-size:calc(var(--size) * .5);font-weight:500;opacity:.92;max-width:900px;text-wrap:balance}
+.alert .v{font-weight:inherit;color:var(--a1)}
+.alert .t2 .v{color:var(--a2)}
+.alert .v-user{color:var(--a1)}
+.alert .hz{display:none}
+
+/* estilo «tarjeta»: cristal oscuro, sombra de color y rayas de peligro (como MixUp) */
+.alert.st-card .txt{padding:16px 26px 20px;background:linear-gradient(135deg,rgba(18,18,24,.86),rgba(10,10,13,.78));border:1.5px solid rgba(236,230,214,.14);border-radius:4px;box-shadow:6px 6px 0 var(--a1),-1px -1px 0 var(--a2) inset,0 20px 60px rgba(0,0,0,.45);position:relative;overflow:hidden}
+.alert.st-card .txt::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 20% 0%,color-mix(in srgb,var(--a1) 22%,transparent),transparent 60%),radial-gradient(ellipse at 100% 100%,color-mix(in srgb,var(--a2) 18%,transparent),transparent 60%);pointer-events:none}
+.alert.st-card .txt > *{position:relative}
+.alert.st-card .hz{display:block;position:absolute;left:8%;right:8%;bottom:-14px;height:6px;background:repeating-linear-gradient(-45deg,var(--a1) 0,var(--a1) 8px,transparent 8px,transparent 16px);opacity:.9}
+.alert.ly-side.st-card .hz{left:calc(var(--img) + 30px)}
+/* estilo «limpio»: solo texto con contorno, para encima del juego */
+.alert.st-clean .t1,.alert.st-clean .t2{text-shadow:0 0 2px #000,0 2px 0 #000,2px 0 0 #000,-2px 0 0 #000,0 -2px 0 #000,0 6px 18px rgba(0,0,0,.7)}
+/* estilo «recorte»: el texto en tiras torcidas, como el logo */
+.alert.st-cut .t1{background:var(--a1);color:var(--ink);padding:4px 14px;transform:rotate(-2deg);box-shadow:5px 5px 0 var(--a2)}
+.alert.st-cut .t1 .v{color:var(--ink);text-decoration:underline 4px var(--a2);text-underline-offset:6px}
+.alert.st-cut .t2{background:var(--paper);color:var(--ink);padding:3px 12px;transform:rotate(1.5deg)}
+.alert.st-cut .t2 .v{color:var(--ink)}
+
+/* entradas y salidas */
+.alert{transition:opacity .45s,transform .55s cubic-bezier(.2,1.4,.4,1),filter .45s}
+.alert.in{opacity:1;transform:none;filter:none}
+.alert.out{opacity:0;transition-duration:.45s;transition-timing-function:ease-in}
+.an-pop{transform:scale(.4)} .an-pop.out{transform:scale(.6)}
+.an-slide{transform:translateX(-120vw)} .an-slide.out{transform:translateX(120vw)}
+.an-drop{transform:translateY(-110vh) rotate(-8deg)} .an-drop.out{transform:translateY(60vh) rotate(6deg)}
+.an-zoom{transform:scale(3);filter:blur(12px)} .an-zoom.out{transform:scale(.2);filter:blur(8px)}
+.an-fade{transform:none} .an-fade.out{transform:none}
+.an-spin{transform:rotate(-200deg) scale(.2)} .an-spin.out{transform:rotate(160deg) scale(.2)}
+.an-bounce{transform:translateY(80vh)} .an-bounce.in{animation:bnc .9s cubic-bezier(.3,1.6,.5,1) both} .an-bounce.out{transform:translateY(80vh)}
+@keyframes bnc{0%{transform:translateY(80vh)}55%{transform:translateY(-40px)}75%{transform:translateY(12px)}100%{transform:none}}
+.an-glitch.in{animation:gl .55s steps(7) both}
+.an-glitch.out{animation:gl .45s steps(6) reverse both}
+@keyframes gl{0%{clip-path:inset(10% 0 60% 0);transform:translate(-30px,0);filter:hue-rotate(90deg) saturate(3);opacity:1}
+  20%{clip-path:inset(50% 0 20% 0);transform:translate(30px,0)}40%{clip-path:inset(0 0 85% 0);transform:translate(-14px,0);filter:hue-rotate(-60deg)}
+  60%{clip-path:inset(70% 0 5% 0);transform:translate(18px,0)}80%{clip-path:inset(30% 0 40% 0);transform:translate(-6px,0)}100%{clip-path:inset(0);transform:none;filter:none;opacity:1}}
+
+/* ---------- chat en pantalla ---------- */
+.chatbox{position:fixed;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:10px;gap:var(--gap,4px);font-size:var(--fs,20px);font-family:var(--font)}
+.chatbox.top{justify-content:flex-start;flex-direction:column}
+.cm{line-height:1.35;word-wrap:break-word;overflow-wrap:anywhere;animation:cin .3s ease both;transition:opacity .6s,transform .6s}
+.cm.gone{opacity:0;transform:translateX(-12px)}
+.cm .nm{font-weight:700}
+.cm .bd{height:1.05em;vertical-align:-.15em;margin-right:3px}
+.cm .em{height:1.6em;vertical-align:middle;margin:-.25em 1px}
+.cm.act .tx{font-style:italic;color:var(--nc)}
+.cm .tx{color:var(--fg,#fff)}
+.chatbox.shadow .cm{text-shadow:0 0 2px #000,1px 1px 1px #000,0 0 6px rgba(0,0,0,.8)}
+.chatbox.boxes .cm{background:rgba(10,10,13,var(--bga,.62));padding:6px 10px;border-left:3px solid var(--nc);border-radius:2px;width:fit-content;max-width:100%}
+.chatbox.boxes.glass .cm{backdrop-filter:blur(8px)}
+@keyframes cin{from{opacity:0;transform:translateY(8px)}}
+.cm.sys{color:var(--cyan);font-style:italic}
+.cm.hl{border-left-color:var(--pink)!important;background:rgba(255,111,216,.18)}
+
+/* ---------- objetivo ---------- */
+.goal{position:fixed;left:12px;right:12px;top:12px;font-family:var(--font,'Space Grotesk'),sans-serif}
+.goal .gt{display:flex;justify-content:space-between;align-items:baseline;font-weight:700;font-size:22px;text-shadow:0 2px 8px rgba(0,0,0,.7);margin-bottom:6px}
+.goal .gt small{font-size:18px;color:var(--a2,var(--cyan))}
+.goal .bar{height:34px;background:rgba(10,10,13,.75);border:1.5px solid rgba(236,230,214,.18);border-radius:3px;overflow:hidden;position:relative;box-shadow:4px 4px 0 var(--a1,var(--pink))}
+.goal .fill{position:absolute;inset:0 auto 0 0;width:0;background:linear-gradient(90deg,var(--a1,var(--pink)),var(--a2,var(--cyan)));transition:width 1.2s cubic-bezier(.2,.8,.2,1)}
+.goal .fill::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(-45deg,rgba(255,255,255,.14) 0,rgba(255,255,255,.14) 10px,transparent 10px,transparent 20px);animation:stripes 1s linear infinite}
+@keyframes stripes{to{background-position:28px 0}}
+.goal .num{position:absolute;inset:0;display:grid;place-items:center;font-weight:700;font-size:18px;text-shadow:0 1px 3px #000}
+.goal + .goal{top:auto}
+
+/* ---------- lista de eventos ---------- */
+.feed{position:fixed;inset:0;display:flex;flex-direction:column;gap:6px;padding:8px;font-family:var(--font,'Space Grotesk'),sans-serif}
+.fe{display:flex;align-items:center;gap:10px;background:rgba(10,10,13,.7);border-left:3px solid var(--c,var(--pink));padding:7px 12px;border-radius:2px;font-size:var(--fs,18px);animation:cin .35s both}
+.fe i{font-style:normal;width:1.4em;text-align:center;color:var(--c,var(--pink))}
+.fe b{font-weight:700}
+.fe span{color:#bdb6a6;margin-left:auto;font-size:.85em}
+
+/* ---------- texto suelto ---------- */
+.label{position:fixed;inset:0;display:flex;align-items:center;font-family:var(--font,'Space Grotesk'),sans-serif;font-size:var(--fs,28px);font-weight:700;padding:4px 8px;text-shadow:0 2px 6px rgba(0,0,0,.75);white-space:nowrap}
+.label em{font-style:normal;color:var(--a1,var(--pink));margin-right:.4em}
+
+/* sin conexión con la app: no se enseña nada raro en el directo */
+html.off .hint-off{display:block}
+.hint-off{display:none}

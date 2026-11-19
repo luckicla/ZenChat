@@ -1,0 +1,77 @@
+{
+  "name": "zenchat",
+  "version": "1.0.0",
+  "description": "ZenChat: el chat de Twitch, las alertas y todo lo del directo en una app",
+  "main": "main.js",
+  "author": "luckicla",
+  "homepage": "https://github.com/luckicla/ZenChat",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win nsis portable --publish never"
+  },
+  "dependencies": {
+    "electron-updater": "^6.3.9"
+  },
+  "devDependencies": {
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3",
+    "rcedit": "^3.1.0"
+  },
+  "build": {
+    "appId": "com.luckicla.zenchat",
+    "productName": "ZenChat",
+    "directories": {
+      "buildResources": "build",
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "src/**/*",
+      "app/**/*",
+      "overlay/**/*",
+      "client.json",
+      "package.json"
+    ],
+    "extraResources": [
+      { "from": "build/icon.ico", "to": "icon.ico" }
+    ],
+    "win": {
+      "target": ["nsis", "portable"],
+      "icon": "build/icon.ico",
+      "signAndEditExecutable": false,
+      "legalTrademarks": "ZenChat"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "runAfterFinish": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "deleteAppDataOnUninstall": false,
+      "shortcutName": "ZenChat",
+      "uninstallDisplayName": "ZenChat",
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "artifactName": "ZenChat-Instalador.${ext}",
+      "allowToChangeInstallationDirectory": true,
+      "multiLanguageInstaller": true,
+      "installerLanguages": ["es_ES", "en_US"],
+      "language": "3082",
+      "displayLanguageSelector": false,
+      "warningsAsErrors": false
+    },
+    "portable": {
+      "artifactName": "ZenChat-Portable.${ext}"
+    },
+    "copyright": "© 2026 luckicla",
+    "afterPack": "build/afterPack.js",
+    "publish": [
+      {
+        "provider": "generic",
+        "url": "https://github.com/luckicla/ZenChat/releases/download/pc-latest/"
+      }
+    ]
+  },
+  "license": "SEE LICENSE IN LICENSE"
+}

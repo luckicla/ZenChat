@@ -1,0 +1,102 @@
+# ZenChat: cada push a main compila
+#   - PC (Windows): el instalador y la portable → release «pc-latest»
+#     (el instalador se actualiza solo con latest.yml)
+#   - Android: la APK → release «android-latest» (+ version.txt para avisar)
+# Si en Settings → Secrets and variables → Actions hay una variable
+# TWITCH_CLIENT_ID, va metida dentro y nadie tiene que ponerla a mano.
+name: ZenChat
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pc:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Compilar
+        shell: bash
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+          TWITCH_CLIENT_ID: ${{ vars.TWITCH_CLIENT_ID }}
+        run: |
+          if [ -n "$TWITCH_CLIENT_ID" ]; then echo "{ \"clientId\": \"$TWITCH_CLIENT_ID\" }" > client.json; fi
+          npm install --no-audit --no-fund
+          npm version "1.0.${{ github.run_number }}" --no-git-tag-version --allow-same-version
+          npx electron-builder --win nsis portable --publish never
+          ls dist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ZenChat-PC
+          path: |
+            dist/ZenChat-Instalador.exe
+            dist/ZenChat-Portable.exe
+      - name: Publicar
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: pc-latest
+          name: ZenChat para PC
+          make_latest: true
+          body: |
+            **ZenChat-Instalador.exe**: se instala y se actualiza sola.
+            **ZenChat-Portable.exe**: sin instalar (los datos van en «ZenChat-datos» al lado).
+            Versión 1.0.${{ github.run_number }}
+          files: |
+            dist/ZenChat-Instalador.exe
+            dist/ZenChat-Instalador.exe.blockmap
+            dist/ZenChat-Portable.exe
+            dist/latest.yml
+
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+      - name: Client ID dentro
+        env:
+          TWITCH_CLIENT_ID: ${{ vars.TWITCH_CLIENT_ID }}
+        run: |
+          if [ -n "$TWITCH_CLIENT_ID" ]; then echo "{ \"clientId\": \"$TWITCH_CLIENT_ID\" }" > client.json; fi
+          cp client.json app/client.json
+      - name: Compilar
+        working-directory: android
+        run: gradle assembleRelease --no-daemon --stacktrace
+      - name: Renombrar
+        run: |
+          cp android/app/build/outputs/apk/release/app-release.apk ZenChat.apk
+          echo "${{ github.run_number }}" > version.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ZenChat-APK
+          path: ZenChat.apk
+      - name: Publicar
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: android-latest
+          name: ZenChat para Android
+          prerelease: true
+          make_latest: false
+          body: |
+            **ZenChat.apk**: el chat en el móvil, con el botón de clip en vertical para TikTok.
+            Versión 1.0.${{ github.run_number }}
+          files: |
+            ZenChat.apk
+            version.txt
