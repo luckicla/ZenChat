@@ -16,6 +16,7 @@ const AlertsUI = (() => {
       <div class="ph"><div><h2>Alertas</h2><p>Lo que sale en OBS con cada follow, sub, bits, raid, canje… Mete <span class="code-i">http://127.0.0.1:47830/alerts</span> en OBS (pestaña OBS).</p></div>
         <div style="display:flex;gap:8px"><button class="btn ghost" id="alAll">Probar todas</button><button class="btn" id="alTest">Probar esta</button></div></div>
       <div class="box">
+        <div class="row"><div class="lb"><b>Estilo rápido para todas</b><small>Cambia el aspecto de todas las alertas de golpe. Los textos, sonidos, imágenes y efectos de cada una se quedan como estén.</small></div><div class="seg" id="gPreset">${Object.entries(ZenAlerts.PRESETS).map(([k, p]) => `<button data-v="${k}">${esc(p.name)}</button>`).join('')}</div></div>
         <div class="row"><div class="lb"><b>Volumen general</b><small>De todas las alertas (cada una tiene el suyo también)</small></div><input type="range" min="0" max="1" step="0.05" id="gVol" value="${g.volume}"></div>
         <div class="row"><div class="lb"><b>Dónde salen</b></div><div class="seg" id="gPos">${[['center', 'Centro'], ['top', 'Arriba'], ['bottom', 'Abajo'], ['left', 'Izquierda'], ['right', 'Derecha']].map(([k, n]) => `<button data-v="${k}" class="${g.pos === k ? 'sel' : ''}">${n}</button>`).join('')}</div></div>
         <div class="row"><div class="lb"><b>Tamaño</b></div><input type="range" min="0.5" max="2" step="0.05" id="gScale" value="${g.scale || 1}"></div>
@@ -23,6 +24,13 @@ const AlertsUI = (() => {
         <div class="row"><div class="lb"><b>Voz (leer mensajes)</b><small>La voz la pone OBS: si no la tiene, usa la de por defecto</small></div><select class="inp" id="gVoice"></select><input type="range" min="0.6" max="1.6" step="0.05" id="gRate" value="${g.ttsRate}" title="Velocidad"></div>
       </div>
       <div class="aed"><div class="atypes" id="alTypes"></div><div id="alEd"></div></div>`;
+    $('gPreset').onclick = e => {
+      const b = e.target.closest('button'); if (!b) return;
+      const { name, ...look } = ZenAlerts.PRESETS[b.dataset.v];
+      for (const t of ZenAlerts.TYPES) Object.assign(A.types[t.id], look);
+      save(); paintEd(); toast(`Estilo «${name}» puesto en todas las alertas`);
+      setTimeout(() => zen.overlay('alert', ZenAlerts.sample(sel, Me.name || 'ZenTester'), 'preview'), 400);
+    };
     $('gVol').oninput = e => { g.volume = +e.target.value; save(); };
     $('gScale').oninput = e => { g.scale = +e.target.value; save(); };
     $('gGap').oninput = e => { g.gap = +e.target.value; $('gGapV').textContent = g.gap + 's'; save(); };
@@ -79,9 +87,13 @@ const AlertsUI = (() => {
       </div>
       <div class="sec">Aspecto</div>
       <div class="box">
-        <div class="row"><div class="lb"><b>Estilo</b></div><div class="seg" id="eStyle">${[['card', 'Cristal'], ['clean', 'Solo texto'], ['cut', 'Sólido']].map(([k, n]) => `<button data-v="${k}" class="${c.style === k ? 'sel' : ''}">${n}</button>`).join('')}</div></div>
+        <div class="row"><div class="lb"><b>Estilo</b></div><div class="seg" id="eStyle">${Object.entries(ZenAlerts.STYLES).map(([k, n]) => `<button data-v="${k}" class="${c.style === k ? 'sel' : ''}">${n}</button>`).join('')}</div></div>
         <div class="row"><div class="lb"><b>Distribución</b></div><div class="seg" id="eLay">${[['stack', 'Imagen arriba'], ['side', 'Al lado'], ['over', 'Texto encima']].map(([k, n]) => `<button data-v="${k}" class="${c.layout === k ? 'sel' : ''}">${n}</button>`).join('')}</div></div>
         <div class="row"><div class="lb"><b>Animación</b></div><select class="inp" id="eAnim">${Object.entries(ZenAlerts.ANIMS).map(([k, n]) => `<option value="${k}"${c.anim === k ? ' selected' : ''}>${n}</option>`).join('')}</select></div>
+        <div class="row"><div class="lb"><b>Texto animado</b><small>Lo que hace el texto mientras está en pantalla</small></div><select class="inp" id="eTAnim">${Object.entries(ZenAlerts.TEXT_ANIMS).map(([k, n]) => `<option value="${k}"${c.textAnim === k ? ' selected' : ''}>${n}</option>`).join('')}</select></div>
+        <div class="row"><div class="lb"><b>Retraso del texto</b><small>Primero sale la imagen y luego el texto (0 = a la vez)</small></div><input type="range" min="0" max="3" step="0.25" id="eTDel" value="${c.textDelay || 0}"><span id="eTDelV">${c.textDelay || 0}s</span></div>
+        <div class="row"><div class="lb"><b>Efecto</b><small>Al salir: confeti, corazones, monedas, chispas o temblor con flash</small></div><select class="inp" id="eFx">${Object.entries(ZenAlerts.FX).map(([k, n]) => `<option value="${k}"${c.fx === k ? ' selected' : ''}>${n}</option>`).join('')}</select></div>
+        <div class="row"><div class="lb"><b>Barra de tiempo</b><small>Una barrita debajo que se va vaciando</small></div><button class="sw" id="eBar"></button></div>
         <div class="row"><div class="lb"><b>Letra</b></div><select class="inp" id="eFont">${Object.entries(ZenAlerts.FONT_NAMES).map(([k, n]) => `<option value="${k}"${c.font === k ? ' selected' : ''}>${n}</option>`).join('')}</select><input type="range" min="20" max="110" id="eSize" value="${c.size}"></div>
         <div class="row"><div class="lb"><b>Colores</b><small>Acento (nombres), segundo acento y texto</small></div><input type="color" id="eC1" value="${c.color}"><input type="color" id="eC2" value="${c.color2}"><input type="color" id="eC3" value="${c.textColor}"></div>
       </div>
@@ -104,6 +116,10 @@ const AlertsUI = (() => {
     $('eDur').oninput = e => { c.dur = +e.target.value; $('eDurV').textContent = c.dur + 's'; save(); };
     $('eAnim').onchange = e => { c.anim = e.target.value; save(); setTimeout(prev, 300); };
     $('eFont').onchange = e => { c.font = e.target.value; save(); };
+    $('eTAnim').onchange = e => { c.textAnim = e.target.value; save(); setTimeout(prev, 300); };
+    $('eFx').onchange = e => { c.fx = e.target.value; save(); setTimeout(prev, 300); };
+    $('eTDel').oninput = e => { c.textDelay = +e.target.value; $('eTDelV').textContent = c.textDelay + 's'; save(); };
+    sw($('eBar'), c.bar !== false, v => { c.bar = v; save(); });
     for (const [id, k] of [['eStyle', 'style'], ['eLay', 'layout']]) $(id).onclick = e => { const b = e.target.closest('button'); if (!b) return; c[k] = b.dataset.v; $(id).querySelectorAll('button').forEach(x => x.classList.toggle('sel', x === b)); save(); setTimeout(prev, 300); };
     bindSound($('eSnd'), c, 'sound', paintEd);
     $('ePlay').onclick = () => ZenSounds.play(mediaUrl(c.sound) || c.sound, c.vol * A.global.volume);

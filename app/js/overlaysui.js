@@ -58,8 +58,16 @@ const OBS = (() => {
     } catch (e) {
       if (e.code !== 601) throw e; // ya existía: se le pone el enlace bueno
       await req('SetInputSettings', { inputName: name, inputSettings });
-      try { await req('CreateSceneItem', { sceneName, sourceName: name }); } catch {}
-      return `«${name}» ya estaba: actualizada${sceneName ? ' (escena «' + sceneName + '»)' : ''}`;
+      // si ya está en la escena no se mete otra encima: se deja una sola (con su
+      // sitio y tamaño) y se borran las repetidas que hubiera de antes
+      let items = [];
+      try { items = ((await req('GetSceneItemList', { sceneName })).sceneItems || []).filter(i => i.sourceName === name); } catch {}
+      if (!items.length) { try { await req('CreateSceneItem', { sceneName, sourceName: name }); } catch {} }
+      let quitadas = 0;
+      for (const it of items.slice(1)) { try { await req('RemoveSceneItem', { sceneName, sceneItemId: it.sceneItemId }); quitadas++; } catch {} }
+      // y se recarga la página para que coja los cambios al momento
+      try { await req('PressInputPropertiesButton', { inputName: name, propertyName: 'refreshnocache' }); } catch {}
+      return `«${name}» actualizada${sceneName ? ' (escena «' + sceneName + '»)' : ''}${quitadas ? ` · quitadas ${quitadas} repetidas` : ''}`;
     }
   }
   async function scenes() { const r = await req('GetSceneList'); return { list: (r.scenes || []).map(x => x.sceneName).reverse(), current: r.currentProgramSceneName }; }

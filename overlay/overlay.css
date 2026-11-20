@@ -48,6 +48,69 @@ body[data-pos=right] .stage{justify-items:end}
 .an-bounce{transform:translateY(80vh)} .an-bounce.in{animation:bnc .9s cubic-bezier(.3,1.6,.5,1) both} .an-bounce.out{transform:translateY(80vh)}
 @keyframes bnc{0%{transform:translateY(80vh)}55%{transform:translateY(-40px)}75%{transform:translateY(12px)}100%{transform:none}}
 
+/* «Meme»: letras gordas con contorno negro, como los directos de humor; la imagen como pegatina */
+.alert.st-meme .t1{text-transform:uppercase;font-size:calc(var(--size) * 1.05);letter-spacing:.5px;color:var(--fg);-webkit-text-stroke:calc(var(--size) * .13) #000;paint-order:stroke fill;text-shadow:0 calc(var(--size) * .09) 0 #000}
+.alert.st-meme .t2{font-family:var(--font);font-weight:400;font-size:calc(var(--size) * .52);-webkit-text-stroke:calc(var(--size) * .08) #000;paint-order:stroke fill;text-shadow:0 4px 0 #000;opacity:1}
+.alert.st-meme .media{rotate:-4deg;filter:drop-shadow(4px 0 0 #fff) drop-shadow(-4px 0 0 #fff) drop-shadow(0 4px 0 #fff) drop-shadow(0 -4px 0 #fff) drop-shadow(0 14px 22px rgba(0,0,0,.55))}
+.alert.st-meme.tshow .t1{animation:memeIn .55s cubic-bezier(.3,1.7,.5,1) var(--td,0s) both}
+@keyframes memeIn{from{transform:scale(2.4) rotate(-7deg);opacity:0}}
+/* «Neón»: tubo de luz que parpadea al encenderse */
+.alert.st-neon .txt{padding:18px 34px 20px;background:rgba(8,6,20,.74);border:3px solid var(--a1);border-radius:18px;box-shadow:0 0 10px var(--a1),0 0 38px color-mix(in srgb,var(--a1) 60%,transparent),inset 0 0 22px color-mix(in srgb,var(--a1) 40%,transparent)}
+.alert.st-neon .t1{text-shadow:0 0 6px rgba(255,255,255,.55),0 0 20px var(--a1)}
+.alert.st-neon .t1 .v{color:#fff;text-shadow:0 0 4px #fff,0 0 12px var(--a1),0 0 30px var(--a1)}
+.alert.st-neon .t2 .v{color:#fff;text-shadow:0 0 4px #fff,0 0 12px var(--a2)}
+.alert.st-neon .t2{text-shadow:0 0 12px var(--a2)}
+.alert.st-neon.tshow .txt{animation:neonOn 1.1s steps(1) var(--td,0s) both}
+@keyframes neonOn{0%{filter:brightness(.25)}8%{filter:none}14%{filter:brightness(.3)}22%{filter:none}30%{filter:brightness(.5)}38%,100%{filter:none}}
+/* «Esports»: panel en diagonal, franja de color y un brillo que lo cruza */
+.alert.st-esports .txt{position:relative;overflow:hidden;padding:14px 48px 16px 54px;background:linear-gradient(100deg,rgba(10,12,18,.94) 58%,color-mix(in srgb,var(--a1) 60%,rgba(10,12,18,.94)));transform:skewX(-11deg);border-bottom:5px solid var(--a1);box-shadow:0 18px 50px rgba(0,0,0,.45)}
+.alert.st-esports .txt > *{transform:skewX(11deg)}
+.alert.st-esports .txt::before{content:"";position:absolute;left:0;top:0;bottom:0;width:12px;background:var(--a1);box-shadow:6px 0 0 var(--a2)}
+.alert.st-esports .txt::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.4) 50%,transparent 70%);transform:translateX(-110%);animation:sweep 1.3s cubic-bezier(.4,0,.2,1) calc(var(--td,0s) + .35s) both}
+@keyframes sweep{to{transform:translateX(110%)}}
+.alert.st-esports .t1{text-transform:uppercase;letter-spacing:2px}
+.alert.st-esports .t2{text-transform:uppercase;letter-spacing:1px;font-size:calc(var(--size) * .42)}
+/* «Banner»: la barra horizontal clásica, con la imagen asomando por la izquierda */
+.alert.st-banner{flex-direction:row!important;display:flex!important;align-items:center;gap:0}
+.alert.st-banner > *{grid-area:auto!important}
+.alert.st-banner .media{position:relative;z-index:1;margin-right:-36px;width:calc(var(--img) * .75)}
+.alert.st-banner .txt{align-items:flex-start;text-align:left;min-width:540px;padding:18px 60px 18px 58px;background:linear-gradient(90deg,rgba(14,15,19,.95),rgba(14,15,19,.82));border-left:8px solid var(--a1);clip-path:polygon(0 0,100% 0,calc(100% - 28px) 100%,0 100%);align-self:center;margin:0}
+.alert.st-banner .t2{text-align:left}
+
+/* texto: retraso (como «Text delay» de Streamlabs) y animaciones mientras está en pantalla */
+.alert.td .txt{opacity:0;translate:0 16px;transition:opacity .4s,translate .5s cubic-bezier(.2,1.4,.4,1)}
+.alert.td.tshow .txt{opacity:1;translate:none}
+.alert .wd{display:inline-block;white-space:nowrap}
+.alert .ch{display:inline-block;white-space:pre}
+.ta-wave.in .v .ch{animation:wave 1.5s ease-in-out infinite;animation-delay:calc(var(--i) * 70ms)}
+@keyframes wave{0%,55%,100%{transform:none}25%{transform:translateY(-.2em) scale(1.08)}}
+.ta-letters .t1 .ch{opacity:0;transform:translateY(.6em) scale(.3)}
+.ta-letters.tshow .t1 .ch{animation:lin .45s cubic-bezier(.3,1.7,.5,1) forwards;animation-delay:calc(var(--i) * 32ms + .15s)}
+@keyframes lin{to{opacity:1;transform:none}}
+.ta-shake.in .t1 .v{display:inline-block;animation:shk .45s linear infinite}
+@keyframes shk{0%,100%{transform:none}20%{transform:translate(2px,-2px) rotate(1.5deg)}40%{transform:translate(-2px,1px) rotate(-1.5deg)}60%{transform:translate(1px,2px) rotate(1deg)}80%{transform:translate(-1px,-1px) rotate(-1deg)}}
+.ta-pulse.in .t1 .v{display:inline-block;margin:0 .14em;animation:pls 1.1s ease-in-out infinite}
+@keyframes pls{50%{transform:scale(1.1)}}
+.ta-rainbow .t1 .v{animation:rbw 2.2s linear infinite}
+@keyframes rbw{to{filter:hue-rotate(360deg)}}
+
+/* barra del tiempo que le queda */
+.alert .tbar{align-self:stretch;height:5px;margin-top:6px;border-radius:3px;overflow:hidden;background:rgba(255,255,255,.16)}
+.alert .tbar i{display:block;height:100%;background:linear-gradient(90deg,var(--a1),var(--a2));transform-origin:left;animation:tbar linear both}
+@keyframes tbar{from{transform:scaleX(1)}to{transform:scaleX(0)}}
+.alert.st-clean .tbar,.alert.st-meme .tbar{box-shadow:0 0 0 2px rgba(0,0,0,.7)}
+.alert.st-cut .tbar i{background:rgba(255,255,255,.85)}
+
+/* efectos */
+.fxl{position:fixed;width:0;height:0;z-index:50;pointer-events:none}
+.fxl .p{position:absolute;left:0;top:0;font-style:normal;line-height:1}
+.fxl .cf{width:14px;height:8px;border-radius:2px;background:var(--pc)}
+.fxl .cf.rd{width:10px;height:10px;border-radius:50%}
+.fxl .ht{font-size:34px;color:var(--pc);text-shadow:0 2px 6px rgba(0,0,0,.35)}
+.fxl .cn{width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff6b0,#ffc83d 45%,#c98a00);box-shadow:inset 0 0 0 3px #b07800,0 3px 8px rgba(0,0,0,.35)}
+.fxl .sp{font-size:26px;color:var(--pc);text-shadow:0 0 10px var(--pc),0 0 20px var(--pc)}
+.flash{position:fixed;inset:0;z-index:49;pointer-events:none;background:radial-gradient(circle,rgba(255,255,255,.9),color-mix(in srgb,var(--pc) 40%,transparent) 50%,transparent 80%);opacity:0}
+
 /* ---------- chat en pantalla ---------- */
 .chatbox{position:fixed;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:10px;gap:var(--gap,4px);font-size:var(--fs,20px);font-family:var(--font)}
 .chatbox.top{justify-content:flex-start;flex-direction:column}

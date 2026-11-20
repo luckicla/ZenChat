@@ -58,8 +58,12 @@ Cada push a `main` compila todo solo en GitHub Actions (`.github/workflows/build
 **Alertas para OBS** (`http://127.0.0.1:47830/alerts`)
 - Follow, sub, resub, subs regaladas, bits, raid, puntos del canal, power-ups, hype train, primer mensaje, racha de directos, shoutout recibido, encuestas, predicciones, anuncios, donación benéfica y objetivo cumplido.
 - Cada una con su texto (`{user}`, `{amount}`, `{months}`, `{message}`…), imagen, GIF o vídeo WEBM, sonido (20 de serie hechos con el sintetizador, o el tuyo), volumen, duración, animación, letra y colores.
+- Estilos Cristal, Solo texto, Sólido, **Meme** (letras gordas con contorno y la imagen como pegatina), **Neón**, **Esports** y **Banner**, y «Estilo rápido para todas» para cambiarlas todas de un clic.
+- Texto animado (ola, letra a letra, temblor, latido o arcoíris en el nombre), retraso del texto, barra de tiempo y efectos al salir: confeti, corazones, monedas, chispas o temblor con flash.
 - Variaciones por cantidad (p. ej. desde 1000 bits otro sonido) y una alerta distinta para cada recompensa de puntos.
 - Leer el mensaje en voz alta, cola cuando llegan varias, pausar, saltar y repetir desde Actividad.
+
+**OBS**: «Añadir a OBS» mete cada recuadro en la escena; «Actualizar en OBS» le pone los cambios y lo recarga, sin meter otro encima (si había repetidos, los quita).
 
 **Más cosas para OBS**
 - `/chat`: el chat en pantalla con emotes (sombra, cajas o cristal; que desaparezcan o no; sin comandos ni bots).
