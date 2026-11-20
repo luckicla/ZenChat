@@ -237,8 +237,16 @@ const OverlaysUI = (() => {
         if (['wpx', 'hpx', 'channel', 't', 'prefix', 'max', 'fs'].includes(k) && el.type !== 'range') paintGrid();
       });
     });
-    ed.querySelectorAll('.seg[data-k]').forEach(sg => sg.onclick = e => { const b = e.target.closest('button'); if (!b) return; sg.querySelectorAll('button').forEach(x => x.classList.toggle('sel', x === b)); upd(id, { [sg.dataset.k]: b.dataset.v }); });
-    ed.querySelectorAll('.sw[data-k]').forEach(el => sw(el, !!w()[el.dataset.k], v => upd(id, { [el.dataset.k]: v })));
+    ed.querySelectorAll('.seg[data-k]').forEach(sg => sg.onclick = e => {
+      const b = e.target.closest('button'); if (!b) return;
+      sg.querySelectorAll('button').forEach(x => x.classList.toggle('sel', x === b));
+      const v = b.dataset.v;
+      // al elegir Chatterino: su letra, su tamaño y fondo opaco (luego se puede cambiar)
+      if (sg.dataset.k === 'style' && v === 'chatterino') { upd(id, { style: v, font: 'segoe', fs: 15, bga: 1, header: true, ts: true, alt: true }, true); return; }
+      if (sg.dataset.k === 'style' && w().style === 'chatterino') { upd(id, { style: v, font: 'inter', fs: 20, bga: 0.55 }, true); return; }
+      upd(id, { [sg.dataset.k]: v });
+    });
+    ed.querySelectorAll('.sw[data-k]').forEach(el => { const k = el.dataset.k, cur = w()[k]; sw(el, cur === undefined ? ['header', 'ts', 'alt'].includes(k) : !!cur, v => upd(id, { [k]: v })); });
     const tl = ed.querySelector('.tlist');
     if (tl) tl.onclick = e => {
       const b = e.target.closest('button'); if (!b) return;
@@ -256,7 +264,8 @@ const OverlaysUI = (() => {
     const size = r('Tamaño en OBS', `<input class="inp s" type="number" data-k="wpx" value="${w.wpx || KIND[w.type].w}"> × <input class="inp s" type="number" data-k="hpx" value="${w.hpx || KIND[w.type].h}">`, 'Ancho × alto de la fuente (luego la puedes escalar en OBS)');
     if (w.type === 'chat') return [
       r('Canal', `<input class="inp" type="text" data-k="channel" value="${esc(w.channel || '')}" placeholder="${esc(Me.login || 'tu canal')}">`, 'Vacío = el tuyo'),
-      r('Estilo', seg('style', [['glass', 'Cristal'], ['boxes', 'Cajas'], ['shadow', 'Solo texto']])),
+      r('Estilo', seg('style', [['chatterino', 'Chatterino'], ['glass', 'Cristal'], ['boxes', 'Cajas'], ['shadow', 'Solo texto']]), 'Chatterino: igual que su chat, con hora, separadores y filas alternas'),
+      ...(w.style === 'chatterino' ? [r('Cabecera del canal', '<button class="sw" data-k="header"></button>', 'La barra de arriba con el nombre del canal'), r('Hora', '<button class="sw" data-k="ts"></button>'), r('Filas alternas', '<button class="sw" data-k="alt"></button>')] : []),
       r('Letra', `<select class="inp" data-k="font">${Object.entries(ZenAlerts.FONT_NAMES).map(([k, n]) => `<option value="${k}"${w.font === k ? ' selected' : ''}>${n}</option>`).join('')}</select>${rng('fs', 12, 48, 1, 'px')}`),
       r('Opacidad del fondo', rng('bga', 0, 1, 0.05)),
       r('Color del texto', `<input type="color" data-k="textColor" value="${esc(w.textColor || '#ffffff')}">`),

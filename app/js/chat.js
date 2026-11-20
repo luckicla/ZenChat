@@ -401,7 +401,7 @@ const Chat = (() => {
     // los recuadros de chat de OBS: cada uno enseña su canal (por defecto, el tuyo)
     const wanted = new Set([(Cfg.get('chatbox') || {}).channel || Me.login, ...(Cfg.get('widgets', []) || []).filter(w => w.type === 'chat').map(w => (w.channel || Me.login || '').toLowerCase())]);
     if (!wanted.has(c.login)) return;
-    zen.overlay('chat', { ch: c.login, id: msg.id, login: msg.login, name: msg.name, color: msg.color, badges: msg.badges, parts: msg.parts, text: msg.text, action: msg.action, hl: msg.hl, sys: msg.sys }, 'chat');
+    zen.overlay('chat', { ch: c.login, t: msg.t || Date.now(), id: msg.id, login: msg.login, name: msg.name, color: msg.color, badges: msg.badges, parts: msg.parts, text: msg.text, action: msg.action, hl: msg.hl, sys: msg.sys }, 'chat');
   }
   // los eventos (follow, sub…) también como una línea en tu chat
   function eventLine(ev) {

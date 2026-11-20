@@ -5,7 +5,13 @@
 (() => {
   const box = document.createElement('div');
   box.className = 'chatbox';
+  // la cabecera de canal de Chatterino (solo con ese estilo)
+  const head = document.createElement('div');
+  head.className = 'cthead';
+  head.hidden = true;
+  document.body.appendChild(head);
   document.body.appendChild(box);
+  const hhmm = t => { const d = new Date(t || Date.now()); return d.getHours() + ':' + String(d.getMinutes()).padStart(2, '0'); };
   let c = {};
   const esc = ZenAlerts.esc;
 
@@ -14,7 +20,10 @@
     me = all.me || '';
     const wd = Zen.widget(all);
     c = { fs: 20, font: 'inter', fade: 0, max: 30, style: 'shadow', bga: 0.62, badges: true, hideCmds: true, hideBots: 'nightbot,streamelements,streamlabs,moobot,fossabot,wizebot', dir: 'bottom', textColor: '#ffffff', gap: 4, ...(all.chatbox || {}), ...(wd || {}) };
-    box.className = 'chatbox ' + (c.style === 'boxes' ? 'boxes' : c.style === 'glass' ? 'boxes glass' : 'shadow') + (c.dir === 'top' ? ' top' : '');
+    const ct = c.style === 'chatterino';
+    box.className = 'chatbox ' + (ct ? 'ct' : c.style === 'boxes' ? 'boxes' : c.style === 'glass' ? 'boxes glass' : 'shadow') + (c.dir === 'top' ? ' top' : '') + (ct && c.header !== false ? ' hashead' : '') + (ct && c.alt !== false ? ' alt' : '');
+    head.hidden = !(ct && c.header !== false);
+    head.textContent = (c.channel || me || '').toLowerCase();
     box.style.setProperty('--fs', c.fs + 'px');
     box.style.setProperty('--font', ZenAlerts.FONTS[c.font] || ZenAlerts.FONTS.grotesk);
     box.style.setProperty('--fg', c.textColor);
@@ -33,7 +42,8 @@
     d.style.setProperty('--nc', m.color || '#5cc8ff');
     const badges = c.badges && m.badges ? m.badges.map(b => `<img class="bd" src="${esc(b.url)}" alt="">`).join('') : '';
     const body = (m.parts || [{ t: 'text', v: m.text }]).map(p => p.t === 'emote' ? `<img class="em" src="${esc(p.url)}" alt="${esc(p.v)}">` : esc(p.v)).join('');
-    d.innerHTML = m.sys ? `<span class="tx">${body}</span>` : `${badges}<span class="nm" style="color:${esc(m.color || '#5cc8ff')}">${esc(m.name)}</span>${m.action ? ' ' : ': '}<span class="tx">${body}</span>`;
+    const ts = c.style === 'chatterino' && c.ts !== false ? `<span class="ts">${hhmm(m.t)}</span>` : '';
+    d.innerHTML = m.sys ? `${ts}<span class="tx">${body}</span>` : `${ts}${badges}<span class="nm" style="color:${esc(m.color || '#5cc8ff')}">${esc(m.name)}</span>${m.action ? ' ' : ': '}<span class="tx">${body}</span>`;
     if (c.dir === 'top') box.prepend(d); else box.appendChild(d);
     while (box.children.length > (c.max || 30)) (c.dir === 'top' ? box.lastElementChild : box.firstElementChild).remove();
     if (c.fade > 0) setTimeout(() => { d.classList.add('gone'); setTimeout(() => d.remove(), 700); }, c.fade * 1000);

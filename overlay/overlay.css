@@ -89,3 +89,19 @@ body[data-pos=right] .stage{justify-items:end}
 /* sin conexión con la app: no se enseña nada raro en el directo */
 html.off .hint-off{display:block}
 .hint-off{display:none}
+
+/* «Chatterino»: igual que el chat de Chatterino (tema oscuro) */
+.chatbox.ct{padding:0;gap:0;background:rgba(17,17,17,var(--bga,1));font-family:var(--font,'Segoe UI'),sans-serif}
+.chatbox.ct.hashead{top:30px}
+.cthead{position:fixed;left:0;right:0;top:0;height:30px;display:flex;align-items:center;justify-content:center;background:#1c1c1c;border-bottom:1px solid #2d2d2d;color:#dcdcdc;font:600 13px 'Segoe UI',sans-serif}
+.cthead[hidden]{display:none}
+.ct .cm{padding:2px 8px 3px;line-height:1.5;border-bottom:1px solid #222;animation:none;border-left:0;text-shadow:none}
+.ct.alt .cm:nth-child(even){background:#161616}
+.ct .cm .ts{color:#8b8b8b;margin-right:6px;font-size:.9em}
+.ct .cm .tx{color:var(--fg,#e6e6e6)}
+.ct .cm .bd{height:1.15em;margin-right:4px}
+.ct .cm .em{height:1.75em;margin:-.3em 1px}
+.ct .cm.hl{background:#5a2a33!important}
+.ct .cm.act .tx{font-style:normal}
+.ct .cm.sys .tx{color:#8b8b8b}
+.ct .cm.gone{opacity:0;transform:none}

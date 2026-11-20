@@ -95,12 +95,12 @@
     return { id: 'test-' + Date.now(), type, user: u, test: true, ...s };
   }
   const FONTS = {
-    inter: "'Inter','Segoe UI',system-ui,sans-serif", grotesk: "'Space Grotesk',system-ui,sans-serif", vt: "'VT323',monospace", display: "'Anton',Impact,sans-serif",
+    segoe: "'Segoe UI',system-ui,sans-serif", inter: "'Inter','Segoe UI',system-ui,sans-serif", grotesk: "'Space Grotesk',system-ui,sans-serif", vt: "'VT323',monospace", display: "'Anton',Impact,sans-serif",
     black: "'Archivo Black','Arial Black',sans-serif", bungee: "'Bungee','Arial Black',sans-serif", marker: "'Permanent Marker',cursive",
     pixel: "'Silkscreen',monospace", retro: "'Righteous',sans-serif", play: "'Playfair Display',Georgia,serif", bebas: "'Bebas Neue',Impact,sans-serif",
     mono: "'Space Mono',Consolas,monospace", rubik: "'Rubik Mono One','Arial Black',sans-serif",
   };
-  const FONT_NAMES = { inter: 'Inter', grotesk: 'Grotesk', vt: 'VT323', display: 'Anton', black: 'Archivo Black', bungee: 'Bungee', marker: 'Rotulador', pixel: 'Píxel', retro: 'Righteous', play: 'Playfair', bebas: 'Bebas', mono: 'Mono', rubik: 'Rubik Mono' };
+  const FONT_NAMES = { segoe: 'Segoe UI', inter: 'Inter', grotesk: 'Grotesk', vt: 'VT323', display: 'Anton', black: 'Archivo Black', bungee: 'Bungee', marker: 'Rotulador', pixel: 'Píxel', retro: 'Righteous', play: 'Playfair', bebas: 'Bebas', mono: 'Mono', rubik: 'Rubik Mono' };
   const FONTS_URL = 'https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Black&family=Bungee&family=Permanent+Marker&family=Silkscreen&family=Righteous&family=Playfair+Display:ital,wght@1,900&family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Rubik+Mono+One&family=VT323&family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap';
   const ANIMS = { pop: 'Pop', slide: 'Deslizar', drop: 'Caer', zoom: 'Zoom', bounce: 'Rebote', fade: 'Fundido', spin: 'Giro' };
 
