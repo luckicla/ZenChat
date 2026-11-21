@@ -104,7 +104,7 @@ const Settings = (() => {
       <div class="sec">Clips</div>
       <div class="box">
         ${row('Duración del clip', 'Lo último que ha pasado en el directo', `<div class="seg" id="sClL">${[[15, '15 s'], [30, '30 s'], [60, '60 s']].map(([k, n]) => `<button data-v="${k}" class="${+u('clipLen') === k ? 'sel' : ''}">${n}</button>`).join('')}</div>`)}
-        ${row('Vertical: qué trozo', 'En el móvil el clip se recorta a 9:16 para TikTok: el centro, o un lado (donde tengas la cámara)', `<div class="seg" id="sClP">${[['left', 'Izquierda'], ['center', 'Centro'], ['right', 'Derecha']].map(([k, n]) => `<button data-v="${k}" class="${u('clipPos') === k ? 'sel' : ''}">${n}</button>`).join('')}</div>`)}
+        ${row('Vertical: qué trozo', 'Solo si Twitch no da su versión vertical (cámara arriba y juego abajo): entonces se recorta a 9:16 el centro, o un lado (donde tengas la cámara)', `<div class="seg" id="sClP">${[['left', 'Izquierda'], ['center', 'Centro'], ['right', 'Derecha']].map(([k, n]) => `<button data-v="${k}" class="${u('clipPos') === k ? 'sel' : ''}">${n}</button>`).join('')}</div>`)}
         ${row('Botón flotante de clip', 'El botón CLIP de abajo a la derecha', `<button class="sw" id="sClF"></button>`)}
       </div>
       <div class="sec">Ventana</div>

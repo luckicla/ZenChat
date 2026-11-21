@@ -72,7 +72,7 @@ Cada push a `main` compila todo solo en GitHub Actions (`.github/workflows/build
 
 **Actividad**: a la derecha, todo lo que pasa en el directo, con filtros y ↻ para repetir la alerta.
 
-**Clips**: ✂ en cada canal (o Ctrl+Mayús+C) hace un clip. En el PC te da el enlace y el editor de Twitch. En el móvil se baja, se recorta a **vertical 1080×1920** (centro, izquierda o derecha) y se guarda en la galería, con botón para compartirlo directo en TikTok.
+**Clips**: ✂ en cada canal (o Ctrl+Mayús+C) hace un clip y lo deja listo para TikTok con la **versión vertical que monta Twitch** (la cámara arriba y el juego abajo, o a pantalla completa, 1080×1920). En el PC se baja a `Vídeos/ZenChat`, con botones para abrir la carpeta, subir a TikTok, cambiar el diseño o ponerle subtítulos en el editor de Twitch y volver a bajarlo. En el móvil va a la galería con botón para compartirlo directo en TikTok. Si Twitch no tiene la vertical (o el clip es de otro canal), en el móvil se recorta a 9:16 (centro, izquierda o derecha) y en el PC queda el enlace y el editor.
 
 **A tu gusto**: temas de color, paneles de cristal con el desenfoque que quieras, imagen de fondo, transparencia acrílica de Windows 11, siempre encima, opacidad de la ventana, tamaño de letra y emotes, esquinas…
 

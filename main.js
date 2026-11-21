@@ -146,6 +146,14 @@ ipcMain.handle('zen', async (_e, what, a, b, c) => {
     case 'open': if (/^https?:\/\//.test(String(a))) shell.openExternal(String(a)); return true;
     case 'openData': shell.openPath(app.getPath('userData')); return true;
     case 'copy': clipboard.writeText(String(a || '')); return true;
+    case 'clipSave': return clipSave(String(a || ''), String(b || ''));
+    case 'clipShow': {
+      // solo archivos de la carpeta de clips
+      const f = path.resolve(String(a || ''));
+      if (f.startsWith(clipDir() + path.sep) && fs.existsSync(f)) shell.showItemInFolder(f);
+      else shell.openPath(clipDir());
+      return true;
+    }
     case 'notify':
       try { if (Notification.isSupported()) new Notification({ title: String(a || 'ZenChat'), body: String(b || ''), icon: iconPath(), silent: true }).show(); } catch {}
       return true;
@@ -183,6 +191,33 @@ ipcMain.handle('zen', async (_e, what, a, b, c) => {
   }
   return null;
 });
+
+/* ---------- clips ---------- */
+// El vídeo vertical que monta Twitch (cámara arriba, juego abajo) se baja a
+// Vídeos/ZenChat, listo para subir a TikTok.
+function clipDir() { return path.join(app.getPath('videos'), 'ZenChat'); }
+async function clipSave(url, name) {
+  if (!/^https:\/\/[^/]*(twitchcdn\.net|twitch\.tv|jtvnw\.net|cloudfront\.net)\//.test(url)) throw new Error('Esa dirección no es de Twitch');
+  const dir = clipDir();
+  fs.mkdirSync(dir, { recursive: true });
+  const safe = name.replace(/[^\w\- ]+/g, '').trim().slice(0, 60) || 'clip';
+  const file = path.join(dir, `ZenChat_${safe}_${Math.floor(Date.now() / 1000)}.mp4`);
+  const r = await fetch(url);
+  if (!r.ok || !r.body) throw new Error(`Twitch no deja bajar el clip (${r.status})`);
+  const total = +r.headers.get('content-length') || 0;
+  const out = fs.createWriteStream(file);
+  let done = 0, last = -1;
+  try {
+    for await (const chunk of r.body) {
+      if (!out.write(chunk)) await new Promise(ok => out.once('drain', ok));
+      done += chunk.length;
+      const p = total ? Math.floor(done * 100 / total) : 0;
+      if (p !== last && win) { last = p; win.webContents.send('zen-clip', { pct: p }); }
+    }
+  } catch (e) { out.destroy(); try { fs.unlinkSync(file); } catch {} throw e; }
+  await new Promise((ok, fail) => out.end(e => e ? fail(e) : ok()));
+  return file;
+}
 
 /* ---------- actualizaciones ---------- */
 const UPDATES = 'https://github.com/luckicla/ZenChat/releases/download/pc-latest/';
